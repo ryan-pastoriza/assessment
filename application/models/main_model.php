@@ -1082,7 +1082,6 @@ class Main_model extends CI_Model
 									$labname=$row4->description;
 									$lab1+=$labfee1;
 									$lab2+=$labfee2;
-									
 								}
 							}
 						}

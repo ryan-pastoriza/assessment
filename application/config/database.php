@@ -94,14 +94,14 @@ $db['default'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
-//192.168.1.175
-//'username' => 'engtech',
-//'password' => 'engtech',
 $db['db2'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
+	// 'hostname' => 'localhost',
+	// 'username' => 'root',
+	// 'password' => '',
+	'hostname' => '192.168.1.175',
+	'username' => 'engtech',
+	'password' => 'engtech',
 	'database' => 'sis_main_db',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
@@ -118,12 +118,14 @@ $db['db2'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
-//192.168.1.175
 $db['db3'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
+	// 'hostname' => 'localhost',
+	// 'username' => 'root',
+	// 'password' => '',
+	'hostname' => '192.168.1.175',
+	'username' => 'engtech',
+	'password' => 'engtech',
 	'database' => 'curriculum_final',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
