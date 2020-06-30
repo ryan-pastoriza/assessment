@@ -15,14 +15,14 @@
                 <span id="date_time" form-control></span>
                 <script type="text/javascript">window.onload = date_time('date_time');</script>
               </i>
-            </a>  
+            </a>
           </li>
           <li>
             <a href="<?php echo site_url('dashboard/logout/').$_SESSION['user']->userId; ?>" style="cursor: default;">
               <i class="fa fa-power-off">
 
               </i>
-            </a>  
+            </a>
           </li>
         </ul>
       </div>
@@ -106,7 +106,7 @@
             </select>
           </div>
         </div>
-      </div>  
+      </div>
       <br/>
       <br/>
       <div class="row">
@@ -114,7 +114,7 @@
           <div class="box box-primary" >
             <div class="box-header with-border">
               <i class="fa fa-graduation-cap"></i>
-              <h3 class="box-title">Student Information</h3>              
+              <h3 class="box-title">Student Information</h3>
             </div>
             <div class="box-body">
               <div class="row">
@@ -147,24 +147,24 @@
                           <td></td>
                         </tr>
                       </tbody>
-                          
+
                     </table>
                   </div>
                   <div class="row" id="toprintsi">
                     <div class="row" style="height:533px;">
                       <table  id="tbmain2">
                         <tbody id="rf1">
-                          
+
                         </tbody>
                       </table>
                     </div>
                     <div class="row"style="height:463px;">
                       <table  id="tbmain3">
-                          
+
                       </table>
                     </div>
-                    
-                    
+
+
                   </div>
                   <div class="row" id="toprintsb">
                     <div class="row" style="height:533px;">
@@ -200,7 +200,7 @@
               <li><a href="#paymentstab" data-toggle="tab"><i class="fa fa-bar-chart"></i> Payment History</a></li>
               <li><a href="#oldsys" data-toggle="tab"><i class="fa fa-bar-chart"></i> Old System Balance</a></li>
               <li style='float: right;' id="viewassb"><a href="#"  id="viewasst"></a></li>
-            </ul> 
+            </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="assessment">
                 <div class="row" id="lcbox">
@@ -216,10 +216,10 @@
                     </div>
                     <div class="small-box bg-yellow">
                       <div class="inner">
-                        <h3 id="oldaccdispl">0.00</h3>     
+                        <h3 id="oldaccdispl">0.00</h3>
                         <div class="icon">
                           <i class="ion ion-ios-list"></i>
-                        </div>                 
+                        </div>
                         <p>Old Account</p>
                       </div>
                     </div>
@@ -230,7 +230,7 @@
                         <h3 id="bridgingdispl">0.00</h3>
                         <div class="icon">
                           <i class="fa fa-book"></i>
-                        </div>   
+                        </div>
                         <p>Bridging</p>
                       </div>
                     </div>
@@ -250,7 +250,7 @@
                         <h3 id="paymentsdispl">0.00</h3>
                         <div class="icon">
                           <i class="fa fa-money"></i>
-                        </div>   
+                        </div>
                         <p>Payments</p>
                       </div>
                     </div>
@@ -294,14 +294,14 @@
                     </div>
                   </div>
                   <div class="box-body no-padding" style="">
-                    
+
                     <div class="row">
                       <div class="col-xs-1">
                       </div>
                       <div class="col-xs-10">
                         <table class="table table-striped">
                           <tbody id="assessmentlistl">
-                            
+
                           </tbody>
                         </table>
                       </div>
@@ -323,10 +323,10 @@
                     </div>
                     <div class="small-box bg-yellow">
                       <div class="inner">
-                        <h3 id="oldaccdispo">0.00</h3>     
+                        <h3 id="oldaccdispo">0.00</h3>
                         <div class="icon">
                           <i class="ion ion-ios-list"></i>
-                        </div>                 
+                        </div>
                         <p>Old Account</p>
                       </div>
                     </div>
@@ -337,7 +337,7 @@
                         <h3 id="bridgingdispo">0.00</h3>
                         <div class="icon">
                           <i class="fa fa-book"></i>
-                        </div>   
+                        </div>
                         <p>Bridging</p>
                       </div>
                     </div>
@@ -357,7 +357,7 @@
                         <h3 id="paymentsdispo">0.00</h3>
                         <div class="icon">
                           <i class="fa fa-money"></i>
-                        </div>   
+                        </div>
                         <p>Payments</p>
                       </div>
                     </div>
@@ -401,26 +401,26 @@
                     </div>
                   </div>
                   <div class="box-body no-padding" style="">
-                    
+
                     <div class="row">
                       <div class="col-xs-1">
                       </div>
                       <div class="col-xs-10">
                         <table class="table table-striped">
                           <tbody id="assessmentlisto">
-                            
+
                           </tbody>
                         </table>
                       </div>
                       <div class="col-xs-1">
                       </div>
                     </div>
-                    
-                    
+
+
                   </div>
                 </div>
               </div>
-              
+
               <div class="tab-pane" id="enrolledsubject">
                 <div class="box">
                   <div class="box-header">
@@ -438,7 +438,7 @@
                         </tr>
                       </thead>
                       <tbody id="studload">
-                        
+
                       </tbody>
                     </table>
                   </div>
@@ -465,7 +465,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="tab-pane" id="paymentstab">
                 <div class="box">
                   <div class="box-header">
@@ -570,14 +570,14 @@ $ses=$this->session->userdata('user');
 $user=$ses->userRole;
 ?>
   <script>
-  
+
   var userrole="<?php echo $user; ?>";
   $('#ocbox').hide();
   $('#oibox').hide();
   $('#toprint').hide();
   $('#toprintsi').hide();
   $('#toprintsb').hide();
-  if (userrole=="Admin") 
+  if (userrole=="Admin")
   {
     $('#viewassb').show();
     $('#viewasst').text("-");
@@ -602,7 +602,7 @@ $user=$ses->userRole;
       $('#lcbox').show();
       $('#libox').show();
     }
-    
+
   });
   function loadold(id1)
   {
@@ -629,7 +629,7 @@ $user=$ses->userRole;
       })
       .fail(function() {
         console.log("error ");
-      })	
+      })
   }
   function loadassess(id1,sy1,sem1,level)
   {
@@ -716,19 +716,19 @@ $user=$ses->userRole;
             m2+=parseFloat(assess.amt1);
             $('#assessmentlistl').append("<tr><td></td><td>"+assess.particular+"</td><td align='right'>"+tonum(parseFloat(assess.amt2))+"</td><td></td></tr>");
             $('#assessmentlisto').append("<tr><td></td><td>"+assess.particular+"</td><td align='right'>"+tonum(parseFloat(assess.amt1))+"</td><td></td></tr>");
-            
+
           }
         });
         $('#assessmentlistl').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(m))+"</td></tr>");
         $('#assessmentlisto').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(m2))+"</td></tr>");
         $('#rgmisc').html("");
         $('#rgmisc').append(tonum(parseFloat(m)));
-        
+
         $('#assessmentlistl').append("<tr><td></td><td></td><td align='right'>TOTAL ASSESSMENT:</td><td align='right'>"+tonum(parseFloat(assessment))+"</td></tr>");
         $('#assessmentlisto').append("<tr><td></td><td></td><td align='right'>TOTAL ASSESSMENT:</td><td align='right'>"+tonum(parseFloat(assessment2))+"</td></tr>");
         $('#assessmentdispl').text(tonum(parseFloat(assessment)));
         $('#assessmentdispo').text(tonum(parseFloat(assessment2)));
-        
+
         $('#assessmentlistl').append("<tr><td colspan='2'>Bridging:</td><td></td><td></td></tr>");
         $('#assessmentlisto').append("<tr><td colspan='2'>Bridging:</td><td></td><td></td></tr>");
         $.each(val.assess, function(index2, assess) {
@@ -739,7 +739,7 @@ $user=$ses->userRole;
             $('#assessmentlisto').append("<tr><td></td><td>"+assess.particular+"</td><td align='right'>"+tonum(parseFloat(assess.amt1))+"</td><td></td></tr>");
           }
         });
-        
+
         $('#assessmentlistl').append("<tr><td></td><td></td><td align='right'>TOTAL BRIDGING:</td><td align='right'>"+tonum(parseFloat(bridg))+"</td></tr>");
         $('#assessmentlisto').append("<tr><td></td><td></td><td align='right'>TOTAL BRIDGING:</td><td align='right'>"+tonum(parseFloat(bridg2))+"</td></tr>");
         $('#bridgingdispl').text(tonum(parseFloat(bridg)));
@@ -754,7 +754,7 @@ $user=$ses->userRole;
             $('#assessmentlisto').append("<tr><td></td><td>"+assess.particular+"</td><td align='right'>"+tonum(parseFloat(assess.amt1))+"</td><td></td></tr>");
           }
         });
-        
+
         $('#assessmentlistl').append("<tr><td></td></td><td></td><td align='right'>TOTAL TUTORIAL:</td><td align='right'>"+tonum(parseFloat(tutor))+"</td></tr>");
         $('#assessmentlisto').append("<tr><td></td></td><td></td><td align='right'>TOTAL TUTORIAL:</td><td align='right'>"+tonum(parseFloat(tutor2))+"</td></tr>");
         $('#tutorialdispl').text(tonum(parseFloat(tutor)));
@@ -775,7 +775,7 @@ $user=$ses->userRole;
             $('#assessmentlisto').append("<tr><td></td><td>"+disc.discountName+"</td><td align='right'>"+tonum(parseFloat(disc.amt1))+"</td><td></td></tr>");
           }
         });
-        
+
         $('#assessmentlistl').append("<tr><td></td><td></td><td align='right'>TOTAL DISCOUNT:</td><td align='right'>"+tonum(parseFloat(discou))+"</td></tr>");
         $('#assessmentlisto').append("<tr><td></td><td></td><td align='right'>TOTAL DISCOUNT:</td><td align='right'>"+tonum(parseFloat(discou2))+"</td></tr>");
         $('#discountdispl').text(tonum(parseFloat(discou)));
@@ -836,7 +836,7 @@ $user=$ses->userRole;
       console.log("error2 ");
     })
   }
-  function reassess() 
+  function reassess()
   {
     var id = $('#assess_studentid').val();
     var sy = $('#assess_sy').val();
@@ -858,9 +858,9 @@ $user=$ses->userRole;
       })
       .fail(function() {
         console.log("error ");
-      })  
+      })
   }
-  function tonum(num1) 
+  function tonum(num1)
   {
     var n=num1
     var parts = n.toFixed(2).split(".");
@@ -885,7 +885,7 @@ $user=$ses->userRole;
     })
     .fail(function() {
       console.log("error getsy");
-    })	
+    })
   })
   $('#search').keyup(function(){
     var tbody = "";
@@ -906,12 +906,12 @@ $user=$ses->userRole;
       })
       .fail(function() {
         console.log("error ");
-      })	
+      })
     }else{
       $("#show-list").html('');
     }
   });
-  
+
   $(document).on('click','#searchres',function(){
     $('#search').val($(this).text());
     $('#studentid').val($(this).attr('data-id'));
@@ -931,7 +931,7 @@ $user=$ses->userRole;
     }else{
       sem2 = "Second Semester"
     }
-    
+
     $.ajax({
         url: "<?php echo base_url('fees/searchinfo') ?>",
         type: 'GET',
@@ -954,7 +954,7 @@ $user=$ses->userRole;
         $("#enrolledtable").html("");
         $("#paymentstable").html("");
         $.each(data, function(index, val) {
-          if (val.telephone_number == null || val.telephone_number == "") 
+          if (val.telephone_number == null || val.telephone_number == "")
           {
             contact=val.phone_number
           }
@@ -1040,7 +1040,7 @@ $user=$ses->userRole;
           $.each(val.studload, function(index2, val2) {
             if(val2.sy == sy && val2.sem == sem2){
               stud = true;
-              if (row==0) 
+              if (row==0)
               {
                 td="<td>Tuition</td><td id='rgtuition' align='right'></td>"
               }
@@ -1056,9 +1056,10 @@ $user=$ses->userRole;
               {
                 td="<td></td><td></td>"
               }
-              if (desc==val2.subj_code) 
+              if (desc==val2.subj_code)
               {
-                $('#rf1').append('<tr><td></td><td colspan="2"></td><td></td><td></td><td align="center">'+val2.day+'</td><td align="center">'+val2.time+'</td><td align="center">'+val2.room+'</td>'+td+'<td></td><td></td></tr>');
+                //$('#rf1').append('<tr><td></td><td colspan="2"></td><td></td><td></td><td align="center">'+val2.day+'</td><td align="center">'+val2.time+'</td><td align="center">'+val2.room+'</td>'+td+'<td></td><td></td></tr>');
+                $('#rf1').append('<tr><td></td><td colspan="2"></td><td></td><td></td><td align="center"></td><td align="center"></td><td align="center"></td>'+td+'<td></td><td></td></tr>');
                 row+=1
               }
               else
@@ -1068,7 +1069,8 @@ $user=$ses->userRole;
                 labtotal+=parseFloat(val2.lab_unit);
                 desc=val2.subj_code
                 $('#studload').append("<tr><td>"+val2.subj_code+"</td><td>"+val2.subj_name1+"</td><td>"+val2.lab_unit+"</td><td>"+val2.lec_unit+"</td><td>"+total+"</td><td>");
-                $('#rf1').append('<tr><td>'+val2.subj_code+'</td><td colspan="2">'+val2.subj_name+'</td><td></td><td align="center">'+total+'</td><td align="center">'+val2.day+'</td><td align="center">'+val2.time+'</td><td align="center">'+val2.room+'</td>'+td+'<td></td><td></td></tr>');
+                //$('#rf1').append('<tr><td>'+val2.subj_code+'</td><td colspan="2">'+val2.subj_name+'</td><td></td><td align="center">'+total+'</td><td align="center">'+val2.day+'</td><td align="center">'+val2.time+'</td><td align="center">'+val2.room+'</td>'+td+'<td></td><td></td></tr>');
+                $('#rf1').append('<tr><td>'+val2.subj_code+'</td><td colspan="2">'+val2.subj_name+'</td><td></td><td align="center">'+total+'</td><td align="center"></td><td align="center"></td><td align="center"></td>'+td+'<td></td><td></td></tr>');
                 row+=1
                 tu+=total
               }
@@ -1121,7 +1123,7 @@ $user=$ses->userRole;
           });
           $('#paymentstable').append("<tr><td></td><td></td><td></td><td></td><td></td><td>____________</td></tr>");
           $('#paymentstable').append("<tr><td></td><td></td><td></td><td></td><td>TOTAL: </td><td>"+amtt+"</td></tr>");
-          
+
         });
         loadassess(id,sy,sem,level);
       })
@@ -1131,7 +1133,7 @@ $user=$ses->userRole;
 
       loadold(acctno);
   });
-  
+
   $(document).on('click','#reassess',function(){
     var id = $('#assess_studentid').val();
     var sy = $('#assess_sy').val();
@@ -1153,7 +1155,7 @@ $user=$ses->userRole;
       })
       .fail(function() {
         console.log("error ");
-      })  
+      })
   });
   $(document).on('click','#deleteDiscounts',function(){
     $('#Sibling').show();
@@ -1173,7 +1175,7 @@ $user=$ses->userRole;
       .fail(function() {
         console.log("error removeDiscounts");
       })
-      
+
   });
   $(document).on('click','#setDiscount',function(){
     var id = $('#assess_studentid').val();
@@ -1206,7 +1208,7 @@ $user=$ses->userRole;
       })
       .fail(function() {
         console.log("error assess");
-      }) 
+      })
 
     var datas = [];
     var others = false;
@@ -1229,7 +1231,7 @@ $user=$ses->userRole;
          ass2 = val.ass2;
           $('.discountCheckBoxes').each(function() {
             val1=0
-            val2=0  
+            val2=0
             if($(this).prop('checked')){
               if($(this).attr('custom') == "true"){
                 desc = $('#customDiscountDesc').val();
@@ -1243,7 +1245,7 @@ $user=$ses->userRole;
                 desc = $(this).attr('value');
                 percent = $(this).attr('less');
                 if(!others){
-                  others = $(this).attr('removeOthers'); 
+                  others = $(this).attr('removeOthers');
                 }
                 if (desc=="Full Payment") {
                   val1=ass1*percent
@@ -1254,7 +1256,7 @@ $user=$ses->userRole;
                 }
               }
               datas.push({ssi_id:id, discountDesc:desc,amt1:val1,amt2:val2,semId:semId,syId:syId});
-            } 
+            }
           });
           // INSERT DATA HERE
           $.ajax({
@@ -1273,9 +1275,9 @@ $user=$ses->userRole;
     .fail(function() {
       console.log("error getStudentTuition ");
     })
-    
+
   });
-  
+
   function generate(id,sy,sem,level)
   {
     var fullDate = new Date()
@@ -1334,7 +1336,7 @@ $user=$ses->userRole;
                 $('#table'+val1.ssi_id+'').append('<tr><td align="left">'+val2.or+'</td><td align="left">'+val2.date+'</td><td align="right">'+tonum(parseFloat(val2.amt2))+'</td></tr>');
                 totalpay+=parseFloat(val2.amt2)
               }
-             
+
             });
             $('#table'+val1.ssi_id+'').append('<tr><td></td><td></td><td align="right"></td></tr>');
             $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Total:</td><td align="right">'+tonum(parseFloat(totalpay))+'</td></tr>');
@@ -1370,7 +1372,7 @@ $user=$ses->userRole;
               var pref=0
               var fin=0
               var perterm =assess*0.25
-              if (totalpay>perterm) 
+              if (totalpay>perterm)
               {
                 totalpay=totalpay-perterm
                 pre=0
@@ -1381,7 +1383,7 @@ $user=$ses->userRole;
                 totalpay=0
               }
               $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Prelim</td><td align="right">'+tonum(parseFloat(pre))+'</td></tr>');
-              if (totalpay>perterm) 
+              if (totalpay>perterm)
               {
                 totalpay=totalpay-perterm
                 mid=0
@@ -1392,7 +1394,7 @@ $user=$ses->userRole;
                 totalpay=0
               }
               $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Midterm</td><td align="right">'+tonum(parseFloat(mid))+'</td></tr>');
-              if (totalpay>perterm) 
+              if (totalpay>perterm)
               {
                 totalpay=totalpay-perterm
                 pref=0
@@ -1403,7 +1405,7 @@ $user=$ses->userRole;
                 totalpay=0
               }
               $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Prefinal</td><td align="right">'+tonum(parseFloat(pref))+'</td></tr>');
-              if (totalpay>perterm) 
+              if (totalpay>perterm)
               {
                 totalpay=totalpay-perterm
                 fin=0
@@ -1425,7 +1427,7 @@ $user=$ses->userRole;
                   if (oldac!=0) {
                     $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Old Account:</td><td align="right">'+tonum(parseFloat(oldac))+'</td></tr>');
                   }
-                
+
                 });
                 var t=0;
                 if (val1.tutorial!=null && val1.tutorial!=0) {
@@ -1458,19 +1460,19 @@ $user=$ses->userRole;
               }else{
                 h=900
               }
-              
+
             }
           });
-         
 
-          
+
+
         });
       })
       .fail(function() {
         console.log("error ");
-      })  
+      })
     }
-      
+
   }
   function getAge(dateString) {
     var today = new Date();
@@ -1484,7 +1486,7 @@ $user=$ses->userRole;
   }
   function changenull(val)
   {
-    if (val == null) 
+    if (val == null)
     {
       return "N/A";
     }
@@ -1501,7 +1503,7 @@ $user=$ses->userRole;
     WinPrint.document.close();
     WinPrint.focus();
     WinPrint.print();
-    WinPrint.close();    
+    WinPrint.close();
   }
   function printContent(divName)
   {
