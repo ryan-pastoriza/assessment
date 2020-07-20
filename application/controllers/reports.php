@@ -16,8 +16,8 @@ class Reports extends CI_Controller {
 
 	public function index()
 	{
-		$data['sched'] = $this->main_model->getsched();
-		$data['syId'] = $this->main_model->getsyid();
+		    $data['sched'] = $this->main_model->getsched();
+		    $data['syId'] = $this->main_model->getsyid();
         $this->load->view('templates/header');
         $this->load->view('reports',$data);
         $this->load->view('templates/footer');
@@ -45,17 +45,21 @@ class Reports extends CI_Controller {
 			redirect("reports");
 		}
 	}
-	public function generate(){
+  public function generate(){
 		$id = "";
 		$sy = $_GET['sy'];
 		$sem = $_GET['sem'];
 		$level = $_GET['level'];
 		echo $this->main_model->generate($id,$sy,$sem,$level);
 	}
-	public function delete($id){
+  public function transfercollection(){
+		$month = $_GET['month'];
+		$year = $_GET['year'];
+		echo $this->main_model->transfercollection($month,$year);
+	}
+  public function delete($id){
 		$this->main_model->deletesched($id);
 		$this->index();
 	}
 
 }
-

@@ -14,14 +14,14 @@
                 <span id="date_time" form-control></span>
                 <script type="text/javascript">window.onload = date_time('date_time');</script>
               </i>
-            </a>  
+            </a>
           </li>
           <li>
             <a href="<?php echo site_url('dashboard/logout/').$_SESSION['user']->userId; ?>" style="cursor: default;">
               <i class="fa fa-power-off">
 
               </i>
-            </a>  
+            </a>
           </li>
         </ul>
       </div>
@@ -75,6 +75,7 @@
             <ul class="nav nav-tabs">
               <li class="active"><a href="#feesched" data-toggle="tab"><i class="fa fa-calendar"></i> Fee Schedule</a></li>
               <li><a href="#accountslip" data-toggle="tab"><i class="fa fa-reorder"></i> Account Slip</a></li>
+              <li><a href="#collectionreport" data-toggle="tab"><i class="fa fa-folder-o"></i> Collection Report</a></li>
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="feesched">
@@ -110,7 +111,7 @@
                               <option selected="true" disabled="disabled">Choose Year</option>
                               <?php
                               $sy2 = date('Y');
-                              for ($i=$sy2; $i > 2004; $i--) { 
+                              for ($i=$sy2; $i > 2004; $i--) {
                                 echo'<option value="'.$i.'" >'.$i.'</option>';
                               }
                               ?>
@@ -208,7 +209,7 @@
                             <td><?php echo $item->sem; ?></td>
                             <td>
                               <a href="<?php echo $this->config->base_url(); ?>reports/delete/<?php echo $item->feeSchedId;?>">
-                                <span style="color:#CC0000" class="glyphicon glyphicon-trash"></span> 
+                                <span style="color:#CC0000" class="glyphicon glyphicon-trash"></span>
                               </a>
                             </td>
                           </tr>
@@ -217,9 +218,9 @@
                       </table>
                     </div>
                   </div>
-                  
+
               </div>
-              
+
               <div class="tab-pane" id="accountslip">
                 <div class="row">
                   <div class="col-md-2">
@@ -263,13 +264,57 @@
                     <tbody id="as">
 
                     </tbody>
-                        
+
                   </table>
-                      
+
                 </div>
-                
+
               </div>
-              
+              <div class="tab-pane active" id="collectionreport">
+                <div class="row">
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <select class="form-control" name="month1" id="month1">
+                        <option selected="true" disabled="disabled">Choose Month</option>
+                        <option value="1" >January</option>
+                        <option value="2" >February</option>
+                        <option value="3" >March</option>
+                        <option value="4" >April</option>
+                        <option value="5" >May</option>
+                        <option value="6" >June</option>
+                        <option value="7" >July</option>
+                        <option value="8" >August</option>
+                        <option value="9" >September</option>
+                        <option value="10" >October</option>
+                        <option value="11" >November</option>
+                        <option value="12" >December</option>
+                      </select>
+                      <span class="text-danger"><?php echo form_error('month1'); ?></span>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <select class="form-control" name="year" id="year1">
+                        <option selected="true" disabled="disabled">Choose Year</option>
+                        <?php
+                        $sy2 = date('Y');
+                        for ($i=$sy2; $i > 2004; $i--) {
+                          echo'<option value="'.$i.'" >'.$i.'</option>';
+                        }
+                        ?>
+                      </select>
+                      <span class="text-danger"><?php echo form_error('year1'); ?></span>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-primary" id="transfercollection">Transfer Collection</button><h5 id="status"></h5>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
 
           </div>
@@ -277,7 +322,7 @@
       </div>
     </section>
   </div>
-  
+
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.0
@@ -291,6 +336,28 @@
   var fullDate = new Date()
   var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : + (fullDate.getMonth()+1);
   var currentDate =  twoDigitMonth + "/" + fullDate.getDate()+ "/" + fullDate.getFullYear();
+  $(document).on('click','#transfercollection',function(){
+    var year2 = $('#year1').val();
+    var month2 = $('#month1').val();
+    if (year2!=null   && month2!=null) {
+      $("#status").text('  Generating...');
+      $.ajax({
+        url: "<?php echo base_url('reports/transfercollection') ?>",
+        type: 'GET',
+        dataType: 'JSON',
+        data: {month: month2,year: year2}
+      })
+      .done(function(data) {
+        $.each(data, function(index, val) {
+
+        });
+        $("#status").text('  Done!');
+      })
+      .fail(function(data) {
+        $("#status").text('  Error!');
+      })
+    }
+  });
   $(document).on('click','#generate',function(){
     var sy1 = $('#sygen').val();
     var sem1 = $('#semgen').val();
@@ -381,7 +448,7 @@
                   var pref=0
                   var fin=0
                   var perterm =assess*0.25
-                  if (totalpay>perterm) 
+                  if (totalpay>perterm)
                   {
                     totalpay=totalpay-perterm
                     pre=0
@@ -392,7 +459,7 @@
                     totalpay=0
                   }
                   $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Prelim</td><td align="right">'+tonum(parseFloat(pre))+'</td></tr>');
-                  if (totalpay>perterm) 
+                  if (totalpay>perterm)
                   {
                     totalpay=totalpay-perterm
                     mid=0
@@ -403,7 +470,7 @@
                     totalpay=0
                   }
                   $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Midterm</td><td align="right">'+tonum(parseFloat(mid))+'</td></tr>');
-                  if (totalpay>perterm) 
+                  if (totalpay>perterm)
                   {
                     totalpay=totalpay-perterm
                     pref=0
@@ -414,7 +481,7 @@
                     totalpay=0
                   }
                   $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Prefinal</td><td align="right">'+tonum(parseFloat(pref))+'</td></tr>');
-                  if (totalpay>perterm) 
+                  if (totalpay>perterm)
                   {
                     totalpay=totalpay-perterm
                     fin=0
@@ -436,7 +503,7 @@
                   if (oldac!=0) {
                     $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Old Account:</td><td align="right">'+tonum(parseFloat(oldac))+'</td></tr>');
                   }
-                
+
                 });
                 var t=0;
                 if (val1.tutorial!=null && val1.tutorial!=0) {
@@ -469,21 +536,21 @@
                   }else{
                     h=900
                   }
-                  
+
                 }
               }else{
                 alert("No Result!")
               }
-          });          
+          });
         });
       })
       .fail(function() {
         console.log("error ");
-      })  
+      })
     }
-      
+
   });
-  function tonum(num1) 
+  function tonum(num1)
   {
     var n=num1
     var parts = n.toFixed(2).split(".");
@@ -505,7 +572,7 @@
     WinPrint.close();
     location.reload();
 
-    
+
   }
 
 
