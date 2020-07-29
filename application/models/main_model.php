@@ -961,8 +961,8 @@ class Main_model extends CI_Model
 				//tuition
 				$tuition1="16000";
 				$tuition2="4000";
-				$this->insertpar($id,"Tuition(DEPED)",$tuition1,$tuition1,"Tuition",$semid,$syid,"shs");
-				$this->insertpar($id,"Tuition",$tuition2,$tuition2,"Tuition",$semid,$syid,$collectionReportGroup);
+				$this->$id,"Tuition(DEPED)",$tuition1,$tuition1,"Tuition",$semid,$syid,"shs");
+				$this->$id,"Tuition",$tuition2,$tuition2,"Tuition",$semid,$syid,$collectionReportGroup);
 
 
 			}
@@ -971,8 +971,8 @@ class Main_model extends CI_Model
 				//tuition
 				$tuition1="20000";
 				$tuition2="0";
-				$this->insertpar($id,"Tuition(DEPED)",$tuition1,$tuition1,"Tuition",$semid,$syid,"shs");
-				$this->insertpar($id,"Tuition",$tuition2,$tuition2,"Tuition",$semid,$syid,$collectionReportGroup);
+				$this->$id,"Tuition(DEPED)",$tuition1,$tuition1,"Tuition",$semid,$syid,"shs");
+				$this->$id,"Tuition",$tuition2,$tuition2,"Tuition",$semid,$syid,$collectionReportGroup);
 			}
 			$misc = $this->db->query("SELECT
 				particulars.amt1,
@@ -995,7 +995,7 @@ class Main_model extends CI_Model
 				{
 					$totalass1+=$row1->amt1;
 					$totalass2+=$row1->amt2;
-					$this->insertpar($id,$row1->particularName,$row1->amt1,$row1->amt2,"Miscellaneous",$semid,$syid,$collectionReportGroup);
+					$this->$id,$row1->particularName,$row1->amt1,$row1->amt2,"Miscellaneous",$semid,$syid,$collectionReportGroup);
 				}
 			}
 
@@ -1004,7 +1004,7 @@ class Main_model extends CI_Model
 			$tuition2=$perunitamt2*$totalunit;
 			$totalass1+=$tuition1;
 			$totalass2+=$tuition2;
-			$this->insertpar($id,"Tuition",$tuition1,$tuition2,"Tuition",$semid,$syid,$collectionReportGroup);
+			$this->$id,"Tuition",$tuition1,$tuition2,"Tuition",$semid,$syid,$collectionReportGroup);
 			//misc
 			$misc = $this->db->query("SELECT
 				particulars.amt1,
@@ -1028,7 +1028,7 @@ class Main_model extends CI_Model
 				{
 					$totalass1+=$row1->amt1;
 					$totalass2+=$row1->amt2;
-					$this->insertpar($id,$row1->particularName,$row1->amt1,$row1->amt2,$row1->feeType,$semid,$syid,$row1->collectionReportGroup);
+					$this->$id,$row1->particularName,$row1->amt1,$row1->amt2,$row1->feeType,$semid,$syid,$row1->collectionReportGroup);
 				}
 			}
 
@@ -1095,7 +1095,7 @@ class Main_model extends CI_Model
 						}
 					}
 					if ($labname!="") {
-						$this->insertpar($id,$labname,$lab1,$lab2,"Laboratory",$semid,$syid,$row3->collectionReportGroup);
+						$this->insertpar($id,$ss_id,$lab1,$lab2,"Laboratory",$semid,$syid,$row3->collectionReportGroup);
 					}
 
 				}
