@@ -55,7 +55,6 @@ class Main_model extends CI_Model
 		$enrolled=array();
 		$status=array();
 		$studload=array();
-		$studload=array();
 		$payments=array();
 		$discreditt=0;
 		$discredit=array();
@@ -188,7 +187,10 @@ class Main_model extends CI_Model
 		WHERE
 			subject_enrolled.ssi_id = '{$id}' AND
 			(subject_enrolled_status.`status` = 'enrolled' OR
-			subject_enrolled_status.`status` = 'add')");
+			subject_enrolled_status.`status` = 'add' OR
+    subject_enrolled_status.`status` = 'change')AND
+      subject_enrolled.sch_year = '{$sy}' AND
+      subject_enrolled.semester = '{$sem}'");
 		if ($query3->num_rows() > 0)
 		{
 			foreach ($query3->result() as $row3)
@@ -1097,6 +1099,7 @@ class Main_model extends CI_Model
 						}
 					}
 					if ($labname!="") {
+            $this->db->delete('assessment', array('ssi_id' => $id,'syid' => $syid,'semId' => $semid,'feeType' => 'Laboratory'));
 						$this->insertpar($id,$row3->particularName,$lab1,$lab2,"Laboratory",$semid,$syid,$row3->collectionReportGroup);
 					}
 
