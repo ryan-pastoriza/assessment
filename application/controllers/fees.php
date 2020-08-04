@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Fees extends CI_Controller 
+class Fees extends CI_Controller
 {
 
     function __construct()
@@ -21,8 +21,8 @@ class Fees extends CI_Controller
 		$this->load->view('templates/header');
         $this->load->view('fees');
 		$this->load->view('templates/footer');
-		
-		
+
+
 	}
 	public function logout()
 	{
@@ -57,6 +57,12 @@ class Fees extends CI_Controller
 		$sy = $_GET['sy'];
 		$sem = $_GET['sem'];
 		$stat = $_GET['stat'];
+    if ($stat=="transferee") {
+      $stat="new";
+    } elseif ($stat=="returnee") {
+      $stat="old";
+    }
+
 		$course = $_GET['course'];
 		$totalunit = $_GET['totalunit'];
 		$labunit = $_GET['labunit'];
@@ -91,7 +97,7 @@ class Fees extends CI_Controller
 		$data = $_GET['discounts'];
 
 		$returned = $this->main_model->insertBatchDiscounts($data,$id,$syId,$semId);
-		
+
 		return json_encode($returned);
 	}
 	public function removeDiscounts()
@@ -109,4 +115,3 @@ class Fees extends CI_Controller
 		echo $this->main_model->generate($id,$sy,$sem,$level);
 	}
 }
-

@@ -1062,10 +1062,14 @@ class Main_model extends CI_Model
 					$labfee2=0;
 					$labname="";
 					$query4 = $DB2->query("SELECT
-						subject_enrolled.ss_id
-					FROM
-						subject_enrolled
-					WHERE
+            subject_enrolled.ss_id,
+            subject_enrolled_status.`status`
+          FROM
+            subject_enrolled
+          INNER JOIN subject_enrolled_status ON subject_enrolled.ses_id = subject_enrolled_status.ses_id
+          WHERE (subject_enrolled_status.`status` = 'enrolled' OR
+            subject_enrolled_status.`status` = 'add' OR
+            subject_enrolled_status.`status` = 'change') AND
 						subject_enrolled.ssi_id ='{$id}'");
 					if ($query4->num_rows() > 0)
 					{
@@ -1098,8 +1102,8 @@ class Main_model extends CI_Model
 							}
 						}
 					}
+          $this->db->delete('assessment', array('ssi_id' => $id,'syid' => $syid,'semId' => $semid,'feeType' => 'Laboratory'));
 					if ($labname!="") {
-            $this->db->delete('assessment', array('ssi_id' => $id,'syid' => $syid,'semId' => $semid,'feeType' => 'Laboratory'));
 						$this->insertpar($id,$row3->particularName,$lab1,$lab2,"Laboratory",$semid,$syid,$row3->collectionReportGroup);
 					}
 
