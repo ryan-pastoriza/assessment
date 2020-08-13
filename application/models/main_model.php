@@ -348,17 +348,27 @@ class Main_model extends CI_Model
 			}
 		}
 		$query7 = $DB2->query("SELECT
-			contact_people.`name`,
-			contact_people.address,
-			contact_person_numbers.number
-		FROM
-			stud_per_info
-		INNER JOIN stud_sch_info ON stud_sch_info.spi_id = stud_per_info.spi_id
-		INNER JOIN contact_people ON contact_people.spi_id = stud_per_info.spi_id
-		INNER JOIN contact_person_numbers ON contact_person_numbers.contact_person_id = contact_people.contact_person_id
-		WHERE
-		stud_sch_info.ssi_id = '{$id}'
-		LIMIT 1");
+        CONCAT(IFNULL(parents.fname,' '),' ',IFNULL(parents.mname,' '),' ',IFNULL(parents.lname,' ')) AS `name`,
+        CONCAT(IFNULL(address.street,' '),' ',IFNULL(brgy.brgy_name,' '),' ',IFNULL(city.city_name,' ')) AS `address`,
+        CONCAT(IFNULL(phone_numbers.phone_number,' '),IFNULL(telephone_numbers.telephone_number,' ')) AS `number`
+      FROM
+        stud_per_info
+      INNER JOIN stud_sch_info ON stud_sch_info.spi_id = stud_per_info.spi_id
+      INNER JOIN parents_student ON parents_student.spi_id = stud_per_info.spi_id
+      INNER JOIN parents ON parents_student.parent_id = parents.parent_id
+      INNER JOIN relationship ON parents_student.rel_id = relationship.rel_id
+      LEFT JOIN parent_phone ON parent_phone.parent_id = parents.parent_id
+      LEFT JOIN phone_numbers ON parent_phone.phone_id = phone_numbers.phone_id
+      LEFT JOIN parent_telephones ON parent_telephones.parent_id = parents.parent_id
+      LEFT JOIN telephone_numbers ON parent_telephones.telephone_id = telephone_numbers.telephone_id
+      LEFT JOIN parent_address ON parent_address.parent_id = parents.parent_id
+      LEFT JOIN address ON parent_address.add_id = address.add_id
+      LEFT JOIN city ON address.city_id = city.city_id
+      LEFT JOIN prov ON address.brgy_id = prov.province_id
+      LEFT JOIN brgy ON brgy.city_id = brgy.brgy_id
+      WHERE
+        stud_sch_info.ssi_id = '{$id}' AND
+        relationship.type_of_rel = 'guardian'");
 		if ($query7->num_rows() > 0)
 		{
 			foreach ($query7->result() as $row7)
@@ -368,41 +378,43 @@ class Main_model extends CI_Model
 				$cnumber=$row7->number;
 			}
 		}
+    //ugma
 		$query1 = $DB2->query("SELECT
-			stud_sch_info.ssi_id,
-			stud_per_info.lname,
-			stud_per_info.fname,
-			stud_per_info.mname,
-			stud_sch_info.acct_no,
-			stud_sch_info.usn_no,
-			stud_sch_info.stud_id,
-			stud_per_info.birthdate,
-			stud_per_info.birthplace,
-			stud_per_info.gender,
-			`year`.`year`,
-			address.street,
-			stud_per_info.weight,
-			stud_per_info.height,
-			citizenship.nationality,
-			prov.province_name,
-			city.city_name,
-			stud_per_info.civ_status,
-			phone_numbers.phone_number,
-			program_list.prog_abv,
-			`year`.is_graduating
-		FROM
-			stud_per_info
-			INNER JOIN stud_sch_info ON stud_sch_info.spi_id = stud_per_info.spi_id
-			LEFT JOIN `year` ON `year`.ssi_id = stud_sch_info.ssi_id
-			LEFT JOIN s_main_address ON s_main_address.spi_id = stud_per_info.spi_id
-			LEFT JOIN address ON s_main_address.add_id = address.add_id
-			LEFT JOIN citizenship ON stud_per_info.cit_id = citizenship.cit_id
-			LEFT JOIN city ON address.city_id = city.city_id
-			LEFT JOIN prov ON city.province_id = prov.province_id
-			LEFT JOIN student_phone ON student_phone.spi_id = stud_per_info.spi_id
-			LEFT JOIN phone_numbers ON student_phone.phone_id = phone_numbers.phone_id
-			LEFT JOIN stud_prog_taken ON stud_prog_taken.ssi_id = stud_sch_info.ssi_id
-			LEFT JOIN program_list ON stud_prog_taken.pl_id = program_list.pl_id
+      stud_sch_info.ssi_id,
+      stud_per_info.lname,
+      stud_per_info.fname,
+      stud_per_info.mname,
+      stud_sch_info.acct_no,
+      stud_sch_info.usn_no,
+      stud_sch_info.stud_id,
+      stud_per_info.birthdate,
+      stud_per_info.birthplace,
+      stud_per_info.gender,
+      `year`.`year`,
+      CONCAT(IFNULL(address.street,' '),IFNULL(brgy.brgy_name,' '),IFNULL(city.city_name,' ')) AS `street`,
+      stud_per_info.weight,
+      stud_per_info.height,
+      citizenship.nationality,
+      prov.province_name,
+      city.city_name,
+      stud_per_info.civ_status,
+      phone_numbers.phone_number,
+      program_list.prog_abv,
+      `year`.is_graduating
+    FROM
+      stud_per_info
+    INNER JOIN stud_sch_info ON stud_sch_info.spi_id = stud_per_info.spi_id
+    LEFT JOIN `year` ON `year`.ssi_id = stud_sch_info.ssi_id
+    LEFT JOIN s_main_address ON s_main_address.spi_id = stud_per_info.spi_id
+    LEFT JOIN address ON s_main_address.add_id = address.add_id
+    LEFT JOIN citizenship ON stud_per_info.cit_id = citizenship.cit_id
+    LEFT JOIN city ON address.city_id = city.city_id
+    LEFT JOIN prov ON address.province_id = prov.province_id
+    LEFT JOIN student_phone ON student_phone.spi_id = stud_per_info.spi_id
+    LEFT JOIN phone_numbers ON student_phone.phone_id = phone_numbers.phone_id
+    LEFT JOIN stud_prog_taken ON stud_prog_taken.ssi_id = stud_sch_info.ssi_id
+    LEFT JOIN program_list ON stud_prog_taken.pl_id = program_list.pl_id
+    LEFT JOIN brgy ON address.brgy_id = brgy.brgy_id
 		WHERE
 			stud_sch_info.ssi_id = '{$id}'
 		LIMIT 1");

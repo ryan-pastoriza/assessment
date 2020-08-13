@@ -976,7 +976,7 @@ $user=$ses->userRole;
           $('#rf2').append('<tr><td height="25px"></td><td></td><td></td><td></td><td colspan="7">'+val.city_name+'</td></tr>');
           $('#rf2').append('<tr><td height="25px"></td><td></td><td></td><td></td><td colspan="7">'+changenull(val.ftelephone_number)+'  '+changenull(val.mtelephone_number)+'</td></tr>');
           $('#rf2').append('<tr><td height="25px"></td><td></td><td></td><td></td><td colspan="7">'+val.gfname+'</td></tr>');
-          $('#rf2').append('<tr><td height="25px"></td><td></td><td></td><td colspan="6">'+val.street+'</td><td colspan="2">'+changenull(val.gphone_number)+'</td></tr>');
+          $('#rf2').append('<tr><td height="25px"></td><td></td><td></td><td colspan="6">'+val.caddress+'</td><td colspan="2">'+changenull(val.gphone_number)+'</td></tr>');
           $('#rf2').append('<tr><td height="25px" colspan="8"></td><td colspan="3">'+val.cname+'</td</tr>');
           $('#rf2').append('<tr><td height="25px"></td><td></td><td></td><td colspan="6">'+val.caddress+'</td><td colspan="2">'+changenull(val.cnumber)+'</td></tr>');
           $('.fullname').text(val.lname + ", " + val.fname +" " + val.mname);
@@ -985,7 +985,7 @@ $user=$ses->userRole;
           $('#assess_studentid').val(val.ssi_id);
           $('#rf1').append("<tr><td></td><td colspan='5'>"+val.usn_no+"</td><td></td><td></td><td></td><td id='studclass'></td><td></td><td></td></tr>");
           $('#rf1').append("<tr><td height='24px'></td><td colspan='5'>"+val.lname+", "+val.fname+" "+val.mname+"</td><td id='rgsem'></td><td></td><td></td><td id='rgsy' align='right'></td><td></td><td></td></tr>");
-          $('#rf1').append("<tr><td height='24px'></td><td colspan='5'>"+val.street+"</td><td colspan='2' align='center'>"+val.gname+"</td><td></td><td>"+contact+"</td><td></td><td></td></tr>");
+          $('#rf1').append("<tr><td height='24px'></td><td colspan='5'>"+val.street+"</td><td colspan='2' align='center'>"+val.gfname+"</td><td></td><td>"+contact+"</td><td></td><td></td></tr>");
           $('#rf1').append("<tr><td></td><td>"+val.birthdate+"</td><td colspan='3' align='right'>"+val.birthplace+"</td><td align='right'>"+val.gender+"</td><td id='rgcourse' colspan='2' align='right'></td><td></td><td align='right'>"+val.year+"</td><td></td><td></td></tr>");
           $('#rf1').append('<tr><td height="20px"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
           $.each(val.status, function(index1, val1) {
