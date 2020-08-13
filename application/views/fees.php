@@ -124,6 +124,7 @@
                 <div class="col-md-7">
                   <p class="studentinfo">
                     <h3><b class="fullname"></b></h3>
+                    <input type="hidden" class="form-control" id="assess_flow">
                     <input type="hidden" class="form-control" id="assess_studentid">
                     <input type="hidden" class="form-control" id="assess_sy">
                     <input type="hidden" class="form-control" id="assess_sem">
@@ -1123,7 +1124,7 @@ $user=$ses->userRole;
           });
           $('#paymentstable').append("<tr><td></td><td></td><td></td><td></td><td></td><td>____________</td></tr>");
           $('#paymentstable').append("<tr><td></td><td></td><td></td><td></td><td>TOTAL: </td><td>"+amtt+"</td></tr>");
-
+          $('#assess_flow').val(val.efsm_id);
         });
         loadassess(id,sy,sem,level);
       })
@@ -1504,7 +1505,26 @@ $user=$ses->userRole;
     WinPrint.focus();
     WinPrint.print();
     WinPrint.close();
+
   }
+  $(document).on('click','#viewasst',function(){
+    var t=$('#viewasst').text();
+    console.log(t)
+    if (t=="-") {
+      $('#viewasst').text("+");
+      $('#ocbox').show();
+      $('#oibox').show();
+      $('#lcbox').hide();
+      $('#libox').hide();
+    }else{
+      $('#viewasst').text("-");
+      $('#ocbox').hide();
+      $('#oibox').hide();
+      $('#lcbox').show();
+      $('#libox').show();
+    }
+
+  });
   function printContent(divName)
   {
     var printContents = document.getElementById(divName).innerHTML;
@@ -1516,5 +1536,15 @@ $user=$ses->userRole;
     window.print();
 
     document.body.innerHTML = originalContents;
+    var id = $('#assess_flow').val();
+    $.ajax({
+      url: "<?php echo base_url('fees/updateflow') ?>",
+      type: 'GET',
+      dataType: 'JSON',
+      data: {id: id},
+    })
+    .always(function(data) {
+      console.log("updated");
+    })
   }
   </script>

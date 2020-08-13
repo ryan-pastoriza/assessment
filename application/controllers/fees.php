@@ -114,4 +114,9 @@ class Fees extends CI_Controller
 		$level = $_GET['level'];
 		echo $this->main_model->generate($id,$sy,$sem,$level);
 	}
+  public function updateflow()
+	{
+		$id = $_GET['id'];
+		echo $this->main_model->updateflow($id);
+	}
 }

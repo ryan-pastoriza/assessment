@@ -378,7 +378,28 @@ class Main_model extends CI_Model
 				$cnumber=$row7->number;
 			}
 		}
-    //ugma
+    $efsm_id="";
+    $query8 = $DB2->query("SELECT
+      efs_student_modes.efsm_id
+    FROM
+      stud_sch_info
+    INNER JOIN efs_student_modes ON efs_student_modes.ssi_id = stud_sch_info.ssi_id
+    INNER JOIN efs_classifications ON efs_student_modes.efc_id = efs_classifications.efc_id
+    INNER JOIN enrollment_flow_sources ON efs_classifications.ef_id = enrollment_flow_sources.ef_id
+    WHERE
+    enrollment_flow_sources.location LIKE '%Accounting%' AND
+      stud_sch_info.ssi_id = '{$id}' AND
+      efs_student_modes.sch_year = '{$sy}' AND
+      efs_student_modes.semester = '{$sem}'");
+		if ($query8->num_rows() > 0)
+		{
+			foreach ($query8->result() as $row8)
+			{
+				$efsm_id=$row8->efsm_id;
+
+			}
+		}
+
 		$query1 = $DB2->query("SELECT
       stud_sch_info.ssi_id,
       stud_per_info.lname,
@@ -425,12 +446,12 @@ class Main_model extends CI_Model
 				$acctno=$row1->acct_no;
 				$oldacc=$this->checkoldsys($acctno);
 
-				$data[]=["is_graduating"=>$row1->is_graduating,"cnumber"=>$cnumber,"caddress"=>$caddress,"cname"=>$cname,"gfname"=>$gfname,"gphone_number"=>$gphone_number,"gtelephone_number"=>$gtelephone_number,"gbirthdate"=>$gbirthdate,"goccupation"=>$goccupation,"gcity_name"=>$gcity_name,"gprovince_name"=>$gprovince_name,"ffname"=>$ffname,"fphone_number"=>$fphone_number,"ftelephone_number"=>$ftelephone_number,"fbirthdate"=>$fbirthdate,"foccupation"=>$foccupation,"fcity_name"=>$fcity_name,"fprovince_name"=>$fprovince_name,"mfname"=>$mfname,"mphone_number"=>$mphone_number,"mtelephone_number"=>$mtelephone_number,"mbirthdate"=>$mbirthdate,"moccupation"=>$moccupation,"mcity_name"=>$mcity_name,"mprovince_name"=>$mprovince_name,"weight"=>$row1->weight,"height"=>$row1->height,"nationality"=>$row1->nationality,"province_name"=>$row1->province_name,"city_name"=>$row1->city_name,"civ_status"=>$row1->civ_status,"phone_number"=>$row1->phone_number,"street"=>$row1->street,"year"=>$row1->year,"birthdate"=>$row1->birthdate,"birthplace"=>$row1->birthplace,"gender"=>$row1->gender,"lname"=>$row1->lname,"fname"=>$row1->fname,"mname"=>$row1->mname,"acct_no"=>$row1->acct_no,"ssi_id"=>$row1->ssi_id,"usn_no"=>$row1->usn_no,"course"=>$row1->prog_abv,"stud_id"=>$row1->stud_id,"sy_sem_enrolled"=>$enrolled,"studload"=>$studload,"payments"=>$payments,"status"=>$status,"discredit"=>$discredit];
+				$data[]=["is_graduating"=>$row1->is_graduating,"cnumber"=>$cnumber,"caddress"=>$caddress,"cname"=>$cname,"gfname"=>$gfname,"gphone_number"=>$gphone_number,"gtelephone_number"=>$gtelephone_number,"gbirthdate"=>$gbirthdate,"goccupation"=>$goccupation,"gcity_name"=>$gcity_name,"gprovince_name"=>$gprovince_name,"ffname"=>$ffname,"fphone_number"=>$fphone_number,"ftelephone_number"=>$ftelephone_number,"fbirthdate"=>$fbirthdate,"foccupation"=>$foccupation,"fcity_name"=>$fcity_name,"fprovince_name"=>$fprovince_name,"mfname"=>$mfname,"mphone_number"=>$mphone_number,"mtelephone_number"=>$mtelephone_number,"mbirthdate"=>$mbirthdate,"moccupation"=>$moccupation,"mcity_name"=>$mcity_name,"mprovince_name"=>$mprovince_name,"weight"=>$row1->weight,"height"=>$row1->height,"nationality"=>$row1->nationality,"province_name"=>$row1->province_name,"city_name"=>$row1->city_name,"civ_status"=>$row1->civ_status,"phone_number"=>$row1->phone_number,"street"=>$row1->street,"year"=>$row1->year,"birthdate"=>$row1->birthdate,"birthplace"=>$row1->birthplace,"gender"=>$row1->gender,"lname"=>$row1->lname,"fname"=>$row1->fname,"mname"=>$row1->mname,"acct_no"=>$row1->acct_no,"ssi_id"=>$row1->ssi_id,"usn_no"=>$row1->usn_no,"course"=>$row1->prog_abv,"stud_id"=>$row1->stud_id,"sy_sem_enrolled"=>$enrolled,"studload"=>$studload,"payments"=>$payments,"status"=>$status,"discredit"=>$discredit,"efsm_id"=>$efsm_id];
 			}
 		}
 		else
 		{
-			$data[]=["is_graduating"=>'No Data',"cnumber"=>'No Data',"caddress"=>'No Data',"cname"=>'No Data',"gfname"=>'No Data',"gphone_number"=>'No Data',"gtelephone_number"=>'No Data',"gbirthdate"=>'No Data',"goccupation"=>'No Data',"gcity_name"=>'No Data',"gprovince_name"=>'No Data',"ffname"=>'No Data',"fphone_number"=>'No Data',"ftelephone_number"=>'No Data',"fbirthdate"=>'No Data',"foccupation"=>'No Data',"fcity_name"=>'No Data',"fprovince_name"=>'No Data',"mfname"=>'No Data',"mphone_number"=>'No Data',"mtelephone_number"=>'No Data',"mbirthdate"=>'No Data',"moccupation"=>'No Data',"mcity_name"=>'No Data',"mprovince_name"=>'No Data',"weight"=>'No Data',"height"=>'No Data',"nationality"=>'No Data',"province_name"=>'No Data',"city_name"=>'No Data',"civ_status"=>'No Data',"phone_number"=>'No Data',"street"=>'No Data',"year"=>'No Data',"birthdate"=>'No Data',"birthplace"=>'No Data',"gender"=>'No Data',"lname"=>$row1->lname,"fname"=>$row1->fname,"mname"=>$row1->mname,"acct_no"=>'No Data',"ssi_id"=>'No Data',"usn_no"=>'No Data',"course"=>'No Data',"stud_id"=>'No Data',"sy_sem_enrolled"=>$enrolled,"studload"=>$studload,"payments"=>$payments,"status"=>$status,"discredit"=>$discredit];
+			$data[]=["is_graduating"=>'No Data',"cnumber"=>'No Data',"caddress"=>'No Data',"cname"=>'No Data',"gfname"=>'No Data',"gphone_number"=>'No Data',"gtelephone_number"=>'No Data',"gbirthdate"=>'No Data',"goccupation"=>'No Data',"gcity_name"=>'No Data',"gprovince_name"=>'No Data',"ffname"=>'No Data',"fphone_number"=>'No Data',"ftelephone_number"=>'No Data',"fbirthdate"=>'No Data',"foccupation"=>'No Data',"fcity_name"=>'No Data',"fprovince_name"=>'No Data',"mfname"=>'No Data',"mphone_number"=>'No Data',"mtelephone_number"=>'No Data',"mbirthdate"=>'No Data',"moccupation"=>'No Data',"mcity_name"=>'No Data',"mprovince_name"=>'No Data',"weight"=>'No Data',"height"=>'No Data',"nationality"=>'No Data',"province_name"=>'No Data',"city_name"=>'No Data',"civ_status"=>'No Data',"phone_number"=>'No Data',"street"=>'No Data',"year"=>'No Data',"birthdate"=>'No Data',"birthplace"=>'No Data',"gender"=>'No Data',"lname"=>$row1->lname,"fname"=>$row1->fname,"mname"=>$row1->mname,"acct_no"=>'No Data',"ssi_id"=>'No Data',"usn_no"=>'No Data',"course"=>'No Data',"stud_id"=>'No Data',"sy_sem_enrolled"=>$enrolled,"studload"=>$studload,"payments"=>$payments,"status"=>$status,"discredit"=>$discredit,"efsm_id"=>""];
 		}
 
 
@@ -2085,6 +2106,18 @@ class Main_model extends CI_Model
 	{
 		return $this->db->delete('assessment', array('ssi_id' => $id, 'syId'=>$sy, 'semId'=>$sem,'particular'=>'Surcharge'));
 	}
+  //update flow status
+  function updateflow($id)
+  {
+    $DB2 = $this->load->database('db2', TRUE);
+    $data = array(
+      'mode' => "done",
+      'updated_at' => date('Y-m-d H:i:s')
+    );
+    $DB2->where('efsm_id', $id);
+    $DB2->update('efs_student_modes', $data);
+
+  }
 
 }
 
