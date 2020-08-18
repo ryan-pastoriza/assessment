@@ -669,6 +669,8 @@ $user=$ses->userRole;
       var i2=0
       var m=0
       var m2=0
+      var o=0
+      var o2=0
       var ta=0
       $("#assessmentlistl").html("");
       $("#assessmentlisto").html("");
@@ -707,8 +709,9 @@ $user=$ses->userRole;
         $('#assessmentlisto').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(l2))+"</td></tr>");
         $('#rglab').html("");
         $('#rglab').append(tonum(parseFloat(l)));
-        $('#assessmentlistl').append("<tr><td colspan='2'>Miscellaneous Fee:</td><td></td><td></td></tr>");
-        $('#assessmentlisto').append("<tr><td colspan='2'>Miscellaneous Fee:</td><td></td><td></td></tr>");
+
+        $('#assessmentlistl').append("<tr><td colspan='2'>Miscellaneous:</td><td></td><td></td></tr>");
+        $('#assessmentlisto').append("<tr><td colspan='2'>Miscellaneous:</td><td></td><td></td></tr>");
         $.each(val.assess, function(index2, assess) {
           if (assess.feeType=="Miscellaneous") {
             assessment+=parseFloat(assess.amt2);
@@ -724,6 +727,24 @@ $user=$ses->userRole;
         $('#assessmentlisto').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(m2))+"</td></tr>");
         $('#rgmisc').html("");
         $('#rgmisc').append(tonum(parseFloat(m)));
+
+        $('#assessmentlistl').append("<tr><td colspan='2'>Other Fee:</td><td></td><td></td></tr>");
+        $('#assessmentlisto').append("<tr><td colspan='2'>Other Fee:</td><td></td><td></td></tr>");
+        $.each(val.assess, function(index2, assess) {
+          if (assess.feeType=="Other Fee") {
+            assessment+=parseFloat(assess.amt2);
+            assessment2+=parseFloat(assess.amt1);
+            o+=parseFloat(assess.amt2);
+            o2+=parseFloat(assess.amt1);
+            $('#assessmentlistl').append("<tr><td></td><td>"+assess.particular+"</td><td align='right'>"+tonum(parseFloat(assess.amt2))+"</td><td></td></tr>");
+            $('#assessmentlisto').append("<tr><td></td><td>"+assess.particular+"</td><td align='right'>"+tonum(parseFloat(assess.amt1))+"</td><td></td></tr>");
+
+          }
+        });
+        $('#assessmentlistl').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(o))+"</td></tr>");
+        $('#assessmentlisto').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(o2))+"</td></tr>");
+        $('#rgmisc').html("");
+        $('#rgmisc').append(tonum(parseFloat(o)));
 
         $('#assessmentlistl').append("<tr><td></td><td></td><td align='right'>TOTAL ASSESSMENT:</td><td align='right'>"+tonum(parseFloat(assessment))+"</td></tr>");
         $('#assessmentlisto').append("<tr><td></td><td></td><td align='right'>TOTAL ASSESSMENT:</td><td align='right'>"+tonum(parseFloat(assessment2))+"</td></tr>");

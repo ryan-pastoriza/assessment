@@ -1019,7 +1019,8 @@ class Main_model extends CI_Model
 			INNER JOIN sy ON particulars.syId = sy.syId
 			INNER JOIN sem ON particulars.semId = sem.semId
 			WHERE
-				particulars.feeType = 'Miscellaneous' AND
+				(particulars.feeType = 'Miscellaneous' OR
+        particulars.feeType = 'Other Fee') AND
 				particulars.studentStatus = '{$stat}' AND
 				sy.sy = '{$sy}' AND
 				sem.sem = '{$sem}' AND
@@ -1056,7 +1057,8 @@ class Main_model extends CI_Model
 				sy.sy = '{$sy}' AND
 				sem.sem = '{$sem}' AND
 				particulars.courseType = '{$courseType}' AND
-				particulars.feeType = 'Miscellaneous'");
+        (particulars.feeType = 'Miscellaneous' OR
+        particulars.feeType = 'Other Fee')");
 			if ($misc->num_rows() > 0)
 			{
 				foreach ($misc->result() as $row1)
