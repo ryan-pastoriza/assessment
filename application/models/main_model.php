@@ -1013,6 +1013,7 @@ class Main_model extends CI_Model
 				particulars.amt1,
 				particulars.amt2,
 				particulars.particularName,
+				particulars.feeType,
 				particulars.collectionReportGroup
 			FROM
 				particulars
@@ -1020,6 +1021,7 @@ class Main_model extends CI_Model
 			INNER JOIN sem ON particulars.semId = sem.semId
 			WHERE
 				(particulars.feeType = 'Miscellaneous' OR
+        particulars.feeType = 'Registration Fee' OR
         particulars.feeType = 'Other Fee') AND
 				particulars.studentStatus = '{$stat}' AND
 				sy.sy = '{$sy}' AND
@@ -1031,7 +1033,7 @@ class Main_model extends CI_Model
 				{
 					$totalass1+=$row1->amt1;
 					$totalass2+=$row1->amt2;
-					$this->insertpar($id,$row1->particularName,$row1->amt1,$row1->amt2,"Miscellaneous",$semid,$syid,$collectionReportGroup);
+					$this->insertpar($id,$row1->particularName,$row1->amt1,$row1->amt2,$row1->feeType,$semid,$syid,$collectionReportGroup);
 				}
 			}
 
@@ -1058,6 +1060,7 @@ class Main_model extends CI_Model
 				sem.sem = '{$sem}' AND
 				particulars.courseType = '{$courseType}' AND
         (particulars.feeType = 'Miscellaneous' OR
+        particulars.feeType = 'Registration Fee' OR
         particulars.feeType = 'Other Fee')");
 			if ($misc->num_rows() > 0)
 			{

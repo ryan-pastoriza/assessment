@@ -111,6 +111,7 @@
                   <select class="form-control feeType" id="feeType" name="feeType" style="width: 100%;" placeholder="Select Fee Type">
                     <option value=""></option>
                     <option value="Others">Others</option>
+                    <option value="Registration fee">Registration fee(Misc.)</option>
                     <option value="Other Fee">Other Fee(Misc.)</option>
                     <option value="Handling Fee">Handling Fee(Misc.)</option>
                     <option value="Miscellaneous">Miscellaneous</option>
