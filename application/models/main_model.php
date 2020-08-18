@@ -1228,11 +1228,11 @@ class Main_model extends CI_Model
 				}
 				$othersfee1=($totalass1-$fyr1)*(6/100);
 				$othersfee2=($totalass2-$fyr2)*(6/100);
-				$this->insertpar($id,"Surcharge",$othersfee1,$othersfee2,"Miscellaneous",$semid,$syid,"others");
+				$this->insertpar($id,"Handling Fee",$othersfee1,$othersfee2,"Handling Fee",$semid,$syid,"others");
 			}
 			else
 			{
-				$this->db->delete('assessment', array('ssi_id' => $id,'syid' => $syid,'semId' => $semid,'particular' => 'Surcharge'));
+				$this->db->delete('assessment', array('ssi_id' => $id,'syid' => $syid,'semId' => $semid,'particular' => 'Handling Fee'));
 			}
 		}
 		//bridging & tutorial
@@ -1505,7 +1505,7 @@ class Main_model extends CI_Model
 			assessment.ssi_id = '{$id}' AND
 			sy.sy = '{$sy}' AND
 			sem.sem = '{$sem}' AND
-			assessment.particular != 'Surcharge'");
+			assessment.particular != 'Handling Fee'");
 		if ($query->num_rows() > 0)
 		{
 			foreach ($query->result() as $row)
@@ -2103,10 +2103,10 @@ class Main_model extends CI_Model
  	{
     return $this->db->delete('discount', array('ssi_id' => $id, 'syId'=>$sy, 'semId'=>$sem, 'discountDesc !='=>'1st Year'));
 	}
-  // remove other fee (surcharge)
+  // remove other fee (Handling Fee)
 	function removeOthers($id,$sy,$sem)
 	{
-		return $this->db->delete('assessment', array('ssi_id' => $id, 'syId'=>$sy, 'semId'=>$sem,'particular'=>'Surcharge'));
+		return $this->db->delete('assessment', array('ssi_id' => $id, 'syId'=>$sy, 'semId'=>$sem,'particular'=>'Handling Fee'));
 	}
   //update flow status
   function updateflow($id)

@@ -14,14 +14,14 @@
                 <span id="date_time" form-control></span>
                 <script type="text/javascript">window.onload = date_time('date_time');</script>
               </i>
-            </a>  
+            </a>
           </li>
           <li>
             <a href="<?php echo site_url('dashboard/logout/').$_SESSION['user']->userId; ?>" style="cursor: default;">
               <i class="fa fa-power-off">
 
               </i>
-            </a>  
+            </a>
           </li>
         </ul>
       </div>
@@ -111,6 +111,8 @@
                   <select class="form-control feeType" id="feeType" name="feeType" style="width: 100%;" placeholder="Select Fee Type">
                     <option value=""></option>
                     <option value="Others">Others</option>
+                    <option value="Other Fee">Other Fee(Misc.)</option>
+                    <option value="Handling Fee">Handling Fee(Misc.)</option>
                     <option value="Miscellaneous">Miscellaneous</option>
                     <option value="Laboratory">Laboratory</option>
                     <option value="Subject">Subject (per unit)</option>
@@ -198,7 +200,7 @@
               <h3 class="box-title">Particulars</h3>
             </div>
             <div class="box-body">
-              
+
               <table class="table" id="user">
                 <thead>
                   <tr>
@@ -230,14 +232,14 @@
                     </tr>
                     <?php endforeach;?>
                 </tbody>
-              </table> 
+              </table>
             </div>
           </div>
         </div>
-      </div>  
+      </div>
     </section>
   </div>
-  
+
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.0
@@ -263,14 +265,14 @@
     })
     .fail(function() {
       console.log("error getsy");
-    })  
+    })
 
     $(document).on('click','.deleteButton',function(){
       $.ajax({
         url: '<?php echo base_url('particular/deleteParticular') ?>',
         type: 'POST',
         dataType: 'JSON',
-        data: { 
+        data: {
           particularId : $(this).val()
           },
         success: function (data) {
