@@ -30,6 +30,7 @@ class Reports extends CI_Controller {
 		$data['sched'] = $this->main_model->getsched();
 		$data['syId'] = $this->main_model->getsyid();
 		$this->form_validation->set_rules('month', 'Month', 'required');
+    $this->form_validation->set_rules('day', 'Day', 'required');
 		$this->form_validation->set_rules('year', 'Year', 'required');
 		$this->form_validation->set_rules('percent', 'Percent', 'required');
 		$this->form_validation->set_rules('term', 'Term', 'required');

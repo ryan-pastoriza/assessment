@@ -111,12 +111,12 @@ class Main_model extends CI_Model
 			foreach ($query6->result() as $row6)
 			{
 
-				$status[]=["sy"=>$row6->sch_year,"sem"=>$row6->semester,"status"=>'enrolled',"course"=>$row6->prog_abv,"current_stat"=>$row6->current_stat,"level"=>$row6->level];
+				$status[]=["sy"=>$row6->sch_year,"sem"=>$row6->semester,"status"=>'enrolled',"course"=>$row6->prog_abv,"current_stat"=>$row6->current_stat,"level"=>$row6->level,"year"=>$row6->year];
 			}
 		}
 		else
 		{
-			$status[]=["sy"=>'No Data',"sem"=>'No Data',"status"=>'No Data',"course"=>'No Data',"current_stat"=>'No Data',"level"=>'No Data'];
+			$status[]=["sy"=>'No Data',"sem"=>'No Data',"status"=>'No Data',"course"=>'No Data',"current_stat"=>'No Data',"level"=>'No Data',"year"=>'No Data'];
 		}
 
 		unset($payments);
@@ -131,14 +131,14 @@ class Main_model extends CI_Model
 			particulars.particularName,
 			Sum(paymentdetails.amt1) AS amt1,
 			Sum(paymentdetails.amt2) AS amt2
-			FROM
-				payments
-			INNER JOIN sem ON payments.semId = sem.semId
-			INNER JOIN sy ON payments.syId = sy.syId
-			INNER JOIN paymentdetails ON paymentdetails.paymentId = payments.paymentId
-			LEFT JOIN assessment ON assessment.semId = sem.semId AND assessment.syId = sy.syId AND paymentdetails.assessmentId = assessment.assessmentId
-			LEFT JOIN particulars ON particulars.semId = sem.semId AND particulars.syId = sy.syId AND paymentdetails.particularId = particulars.particularId
-			WHERE
+		FROM
+			payments
+		INNER JOIN sem ON payments.semId = sem.semId
+		INNER JOIN sy ON payments.syId = sy.syId
+		INNER JOIN paymentdetails ON paymentdetails.paymentId = payments.paymentId
+		LEFT JOIN assessment ON assessment.semId = sem.semId AND assessment.syId = sy.syId AND paymentdetails.assessmentId = assessment.assessmentId
+		LEFT JOIN particulars ON particulars.semId = sem.semId AND particulars.syId = sy.syId AND paymentdetails.particularId = particulars.particularId
+		WHERE
 			payments.ssi_id ='{$id}'OR
 			payments.acctno = '{$acctno}'
 		GROUP BY
@@ -535,7 +535,7 @@ class Main_model extends CI_Model
 								course.`status` = '{$status}' LIMIT 1)) as `amt`
 						From
 							tbl_stud_load
-						INNER JOIN tbl_bridging_subj ON tbl_stud_load.Subject_code = tbl_bridging_subj.Subject_code
+						INNER JOIN tbl__subj ON tbl_stud_load.Subject_code = tbl_bridging_subj.Subject_code
 						INNER JOIN tbl_schedule ON tbl_stud_load.Subject_code = tbl_schedule.Subject_code
 						Where
 							tbl_bridging_subj.sem = '{$sem}' AND
@@ -1073,6 +1073,7 @@ class Main_model extends CI_Model
 			}
 
 			//lab subject
+      $this->db->delete('assessment', array('ssi_id' => $id,'syid' => $syid,'semId' => $semid,'feeType' => 'Laboratory'));
 			$lab1=0;
 			$lab2=0;
 			$data2=array();
@@ -1140,7 +1141,7 @@ class Main_model extends CI_Model
 							}
 						}
 					}
-          $this->db->delete('assessment', array('ssi_id' => $id,'syid' => $syid,'semId' => $semid,'feeType' => 'Laboratory'));
+
 					if ($labname!="") {
 						$this->insertpar($id,$row3->particularName,$lab1,$lab2,"Laboratory",$semid,$syid,$row3->collectionReportGroup);
 					}
@@ -1240,11 +1241,17 @@ class Main_model extends CI_Model
 		}
 		//bridging & tutorial
 		$subjectload = $DB2->query("SELECT
-		subject_enrolled.ss_id
+			subject_enrolled.ss_id
 		FROM
 			subject_enrolled
+		INNER JOIN subject_enrolled_status ON subject_enrolled.ses_id = subject_enrolled_status.ses_id
 		WHERE
-			subject_enrolled.ssi_id ='{$id}'");
+			subject_enrolled.ssi_id = '{$id}' AND
+			(subject_enrolled_status.`status` = 'enrolled' OR
+			subject_enrolled_status.`status` = 'add' OR
+      subject_enrolled_status.`status` = 'change')AND
+      subject_enrolled.sch_year = '{$sy}' AND
+      subject_enrolled.semester = '{$sem}'");
 		if ($subjectload->num_rows() > 0)
 		{
 			foreach ($subjectload->result() as $row)
@@ -1508,7 +1515,9 @@ class Main_model extends CI_Model
 			assessment.ssi_id = '{$id}' AND
 			sy.sy = '{$sy}' AND
 			sem.sem = '{$sem}' AND
-			assessment.particular != 'Handling Fee'");
+      (assessment.feeType <> 'Handling Fee' AND
+      assessment.feeType <> 'Tutorial' AND
+      assessment.feeType <> 'Bridging')");
 		if ($query->num_rows() > 0)
 		{
 			foreach ($query->result() as $row)
@@ -1745,6 +1754,7 @@ class Main_model extends CI_Model
 	function savesched()
   {
     $arr['month']=$this->input->post('month');
+    $arr['day']=$this->input->post('day');
     $arr['year']=$this->input->post('year');
     $arr['percent']=$this->input->post('percent');
     $arr['label']=$this->input->post('term');
@@ -1893,7 +1903,7 @@ class Main_model extends CI_Model
 				$pay = $this->db->query("SELECT DISTINCT
 					payments.orNo,
 					payments.paymentDate,
-					payments.amt2
+					Sum(paymentdetails.amt2) AS `amt2`
 				FROM
 					payments
 				INNER JOIN paymentdetails ON paymentdetails.paymentId = payments.paymentId
@@ -1905,7 +1915,9 @@ class Main_model extends CI_Model
 					sem.sem = '{$sem}' AND
 					sy.sy = '{$sy}' AND
 					(assessment.feeType <> 'Bridging' AND
-					assessment.feeType <> 'Tutorial')");
+					assessment.feeType <> 'Tutorial')
+        GROUP BY
+          payments.orNo");
 				if ($pay->num_rows() > 0)
 				{
 					foreach ($pay->result() as $row1)
@@ -1924,34 +1936,43 @@ class Main_model extends CI_Model
 					$midterm=0.65;
 					$prefinal=0.85;
 					$final=1;
+          $dl1="";
+          $dl2="";
+          $dl3="";
+          $dl4="";
 					$percent = $this->db->query("SELECT
-					fee_schedule.label,
-					fee_schedule.percent
-				FROM
-					fee_schedule
-				INNER JOIN sem ON fee_schedule.semId = sem.semId
-				INNER JOIN sy ON fee_schedule.syId = sy.syId
-				WHERE
-					sem.sem = '{$sem}' AND
-					sy.sy = '{$sy}'");
+            fee_schedule.label,
+            fee_schedule.percent,
+            CONCAT(fee_schedule.`month`,' ',fee_schedule.`day`,', ',fee_schedule.`year`) AS `deadline`
+          FROM
+  					fee_schedule
+  				INNER JOIN sem ON fee_schedule.semId = sem.semId
+  				INNER JOIN sy ON fee_schedule.syId = sy.syId
+  				WHERE
+  					sem.sem = '{$sem}' AND
+  					sy.sy = '{$sy}'");
 				if ($percent->num_rows() > 0)
 				{
 					foreach ($percent->result() as $row1)
 					{
 						if ($row1->label=="Prelim") {
 							$prelim=$row1->percent;
+              $dl1=$row1->deadline;
 						}
 						else if ($row1->label=="Midterm")
 						{
 							$midterm=$row1->percent;
+              $dl2=$row1->deadline;
 						}
 						else if ($row1->label=="PreFinal")
 						{
 							$prefinal=$row1->percent;
+              $dl3=$row1->deadline;
 						}
 						else if ($row1->label=="Final")
 						{
 							$final=$row1->percent;
+              $dl4=$row1->deadline;
 						}
 					}
 
@@ -1987,15 +2008,13 @@ class Main_model extends CI_Model
 				}
 				// bridging payent
 				$bridgingpayment=0;
-				$bridgingpay = $this->db->query("SELECT DISTINCT
-					SUM(payments.amt2) AS amt2
-				FROM
-					payments
-				INNER JOIN paymentdetails ON paymentdetails.paymentId = payments.paymentId
-				INNER JOIN assessment ON paymentdetails.assessmentId = assessment.assessmentId
-				INNER JOIN sem ON payments.semId = sem.semId AND assessment.semId = sem.semId
-				INNER JOIN sy ON payments.syId = sy.syId AND assessment.syId = sy.syId
-				WHERE
+				$bridgingpay = $this->db->query("SELECT
+          Sum(paymentdetails.amt2) AS amt2
+        FROM
+          payments
+        INNER JOIN paymentdetails ON paymentdetails.paymentId = payments.paymentId
+        INNER JOIN assessment ON paymentdetails.assessmentId = assessment.assessmentId
+        WHERE
 					payments.ssi_id = '{$row->ssi_id}' AND
 					assessment.feeType = 'Bridging'");
 				if ($bridgingpay->num_rows() > 0)
@@ -2026,16 +2045,12 @@ class Main_model extends CI_Model
 				}
 				// tutorial payent
 				$tutorialpayment=0;
-				$tutorialpay = $this->db->query("SELECT DISTINCT
-					payments.orNo,
-					payments.paymentDate,
-					payments.amt2
-				FROM
-					payments
-				INNER JOIN paymentdetails ON paymentdetails.paymentId = payments.paymentId
-				INNER JOIN assessment ON paymentdetails.assessmentId = assessment.assessmentId
-				INNER JOIN sem ON payments.semId = sem.semId AND assessment.semId = sem.semId
-				INNER JOIN sy ON payments.syId = sy.syId AND assessment.syId = sy.syId
+				$tutorialpay = $this->db->query("SELECT
+          Sum(paymentdetails.amt2) AS amt2
+        FROM
+          payments
+        INNER JOIN paymentdetails ON paymentdetails.paymentId = payments.paymentId
+        INNER JOIN assessment ON paymentdetails.assessmentId = assessment.assessmentId
 				WHERE
 					payments.ssi_id = '{$row->ssi_id}' AND
 					assessment.feeType = 'Tutorial'");
@@ -2052,7 +2067,34 @@ class Main_model extends CI_Model
 				$bridgold=$this->checkoldsys3($row->acct_no);
 				$tutorialold=$this->checkoldsys4($row->acct_no);
 				//for ($i=0; $i < 1000; $i++) {
-					$student[]=["level"=>$level,"ssi_id"=>$row->ssi_id,"stud_id"=>$row->stud_id,"fname"=>$row->fname,"mname"=>$row->mname,"lname"=>$row->lname,"prog_abv"=>$row->prog_abv,"level"=>$row->level,"assessment"=>$assessment,"payment"=>$payment,"prelim"=>$prelim,"midterm"=>$midterm,"prefinal"=>$prefinal,"final"=>$final,"old"=>$old,"bridging"=>$bridging,"bridgingpayment"=>$bridgingpayment,"tutorial"=>$tutorial,"tutorialpayment"=>$tutorialpayment,"assessold"=>$assessold,"bridgold"=>$bridgold,"tutorialold"=>$tutorialold];
+					$student[]=[
+            "level"=>$level,
+            "ssi_id"=>$row->ssi_id,
+            "stud_id"=>$row->stud_id,
+            "fname"=>$row->fname,
+            "mname"=>$row->mname,
+            "lname"=>$row->lname,
+            "prog_abv"=>$row->prog_abv,
+            "level"=>$row->level,
+            "assessment"=>$assessment,
+            "payment"=>$payment,
+            "prelim"=>$prelim,
+            "midterm"=>$midterm,
+            "prefinal"=>$prefinal,
+            "final"=>$final,
+            "old"=>$old,
+            "bridging"=>$bridging,
+            "bridgingpayment"=>$bridgingpayment,
+            "tutorial"=>$tutorial,
+            "tutorialpayment"=>$tutorialpayment,
+            "assessold"=>$assessold,
+            "bridgold"=>$bridgold,
+            "tutorialold"=>$tutorialold,
+            "dl1"=>$dl1,
+            "dl2"=>$dl2,
+            "dl3"=>$dl3,
+            "dl4"=>$dl4
+          ];
 				//}
 			}
 		}else{

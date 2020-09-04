@@ -132,6 +132,7 @@
                     <input type="hidden" class="form-control" id="assess_course">
                     <input type="hidden" class="form-control" id="assess_isgraduating">
                     <input type="hidden" class="form-control" id="assess_level">
+                    <input type="hidden" class="form-control" id="assess_year">
                     <input type="hidden" class="form-control" id="assess_totalunit">
                     <input type="hidden" class="form-control" id="assess_labunit">
                     <p class="text-danger" id="enrollmentstatus"></p>
@@ -149,6 +150,12 @@
                         </tr>
                       </tbody>
 
+                    </table>
+                  </div>
+                  <div class="row" id="toprintas2">
+                    <table class="table table-sm" id="tbmainas2">
+                      <tbody id="as2">
+                      </tbody>
                     </table>
                   </div>
                   <div class="row" id="toprintsi">
@@ -181,7 +188,7 @@
                 <div class="col-md-2">
                   <button type="button" id="reassess" class="btn btn-block btn-primary">Re-Assess</button>
                   <button type="button" id="discount" class="btn btn-block btn-primary" data-toggle="modal" data-target="#discountModal">Discount</button>
-                  <button type="button" id="print" class="btn btn-block btn-primary" onclick="printContentslip('toprint');">Account Slip</button>
+                  <button type="button" id="print" class="btn btn-block btn-primary" onclick="printContentslip('toprintas2');">Account Slip</button>
                   <button type="button" id="print2" class="btn btn-block btn-primary" onclick="printContent('toprintsi');">Registration Form 1</button>
                   <button type="button" id="print3" class="btn btn-block btn-primary" onclick="printContent('toprintsb');">Registration Form 2</button>
                 </div>
@@ -578,6 +585,7 @@ $user=$ses->userRole;
   $('#toprint').hide();
   $('#toprintsi').hide();
   $('#toprintsb').hide();
+  $('#toprintas2').hide();
   if (userrole=="Admin")
   {
     $('#viewassb').show();
@@ -634,6 +642,8 @@ $user=$ses->userRole;
   }
   function loadassess(id1,sy1,sem1,level)
   {
+    $('#Sibling').show();
+    $('#FullPayment').show();
     var id=id1;
     var sy=sy1;
     var sem=sem1;
@@ -747,8 +757,8 @@ $user=$ses->userRole;
         });
         $('#assessmentlistl').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(o))+"</td></tr>");
         $('#assessmentlisto').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(o2))+"</td></tr>");
-        $('#rgmisc').html("");
-        $('#rgmisc').append(tonum(parseFloat(o)));
+        $('#rgother').html("");
+        $('#rgother').append(tonum(parseFloat(o)));
 
         $('#assessmentlistl').append("<tr><td colspan='2'>Registration Fee:</td><td></td><td></td></tr>");
         $('#assessmentlisto').append("<tr><td colspan='2'>Registration Fee:</td><td></td><td></td></tr>");
@@ -765,8 +775,8 @@ $user=$ses->userRole;
         });
         $('#assessmentlistl').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(r))+"</td></tr>");
         $('#assessmentlisto').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(r2))+"</td></tr>");
-        $('#rgmisc').html("");
-        $('#rgmisc').append(tonum(parseFloat(r)));
+        $('#rgreg').html("");
+        $('#rgreg').append(tonum(parseFloat(r)));
 
         $('#assessmentlistl').append("<tr><td colspan='2'>Handling Fee:</td><td></td><td></td></tr>");
         $('#assessmentlisto').append("<tr><td colspan='2'>Handling Fee:</td><td></td><td></td></tr>");
@@ -783,8 +793,8 @@ $user=$ses->userRole;
         });
         $('#assessmentlistl').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(h))+"</td></tr>");
         $('#assessmentlisto').append("<tr><td></td><td></td><td></td><td align='right'>"+tonum(parseFloat(h2))+"</td></tr>");
-        $('#rgmisc').html("");
-        $('#rgmisc').append(tonum(parseFloat(h)));
+        $('#rghand').html("");
+        $('#rghand').append(tonum(parseFloat(h)));
 
         $('#assessmentlistl').append("<tr><td></td><td></td><td align='right'>TOTAL ASSESSMENT:</td><td align='right'>"+tonum(parseFloat(assessment))+"</td></tr>");
         $('#assessmentlisto').append("<tr><td></td><td></td><td align='right'>TOTAL ASSESSMENT:</td><td align='right'>"+tonum(parseFloat(assessment2))+"</td></tr>");
@@ -916,7 +926,7 @@ $user=$ses->userRole;
         data: {id: id,sy: sy,sem: sem,stat: stat,course: course,totalunit: totalunit,labunit: labunit,level: level,graduating: graduating},
       })
       .done(function(data) {
-        loadassess(id,sy,sem);
+        loadassess(id,sy,sem,level);
       })
       .fail(function() {
         console.log("error ");
@@ -1073,6 +1083,7 @@ $user=$ses->userRole;
               $('#assess_status').val(val1.current_stat);
               $('#assess_course').val(val1.course);
               $('#assess_level').val(val1.level);
+              $('#assess_year').val(val1.year);
               $('#studclass').text(val1.current_stat);
               $('#rgsem').text(val1.sem);
               $('#rgsy').text(val1.sy);
@@ -1092,9 +1103,11 @@ $user=$ses->userRole;
               $('#assess_status').val("");
               $('#assess_course').val("");
               $('#assess_level').val("");
+              $('#assess_year').val("");
             }
           });
           var desc=""
+          var desc2=""
           var row=0
           var td=""
           var tu=0
@@ -1114,11 +1127,23 @@ $user=$ses->userRole;
               {
                 td="<td>Misc.</td><td id='rgmisc' align='right'></td>"
               }
+              else if(row==3)
+              {
+                td="<td>Other Fee</td><td id='rgother' align='right'></td>"
+              }
+              else if(row==4)
+              {
+                td="<td>Registration</td><td id='rgreg' align='right'></td>"
+              }
+              else if(row==5)
+              {
+                td="<td>Handling</td><td id='rghand' align='right'></td>"
+              }
               else
               {
                 td="<td></td><td></td>"
               }
-              if (desc==val2.subj_code)
+              if (desc==val2.subj_code && desc2==val2.subj_name)
               {
                 //$('#rf1').append('<tr><td></td><td colspan="2"></td><td></td><td></td><td align="center">'+val2.day+'</td><td align="center">'+val2.time+'</td><td align="center">'+val2.room+'</td>'+td+'<td></td><td></td></tr>');
                 $('#rf1').append('<tr><td></td><td colspan="2"></td><td></td><td></td><td align="center"></td><td align="center"></td><td align="center"></td>'+td+'<td></td><td></td></tr>');
@@ -1130,6 +1155,7 @@ $user=$ses->userRole;
                 lectotal+=parseFloat(val2.lec_unit);
                 labtotal+=parseFloat(val2.lab_unit);
                 desc=val2.subj_code
+                desc2=val2.subj_name
                 $('#studload').append("<tr><td>"+val2.subj_code+"</td><td>"+val2.subj_name1+"</td><td>"+val2.lab_unit+"</td><td>"+val2.lec_unit+"</td><td>"+total+"</td><td>");
                 //$('#rf1').append('<tr><td>'+val2.subj_code+'</td><td colspan="2">'+val2.subj_name+'</td><td></td><td align="center">'+total+'</td><td align="center">'+val2.day+'</td><td align="center">'+val2.time+'</td><td align="center">'+val2.room+'</td>'+td+'<td></td><td></td></tr>');
                 $('#rf1').append('<tr><td>'+val2.subj_code+'</td><td colspan="2">'+val2.subj_name+'</td><td></td><td align="center">'+total+'</td><td align="center"></td><td align="center"></td><td align="center"></td>'+td+'<td></td><td></td></tr>');
@@ -1193,7 +1219,7 @@ $user=$ses->userRole;
         console.log("error ");
       })
 
-      loadold(acctno);
+      //loadold(acctno);
   });
 
   $(document).on('click','#reassess',function(){
@@ -1256,17 +1282,7 @@ $user=$ses->userRole;
         data: {id: id,sy: sy,sem: sem,stat: stat,course: course,totalunit: totalunit,labunit: labunit,level: level,graduating: graduating},
       })
       .done(function(data) {
-        $.ajax({
-          url: "<?php echo base_url('fees/loadassess') ?>",
-          type: 'GET',
-          dataType: 'JSON',
-          data: {id: id,sem: sem,sy: sy},
-        })
-        .done(function(data) {
-        })
-        .fail(function() {
-          console.log("error loadassess");
-        })
+        loadassess(id,sy,sem,level);
       })
       .fail(function() {
         console.log("error assess");
@@ -1349,6 +1365,9 @@ $user=$ses->userRole;
     var sy1 = $('#assess_sy').val();
     var sem1 = $('#assess_sem').val();
     var level1 = $('#assess_level').val();
+    var year = $('#assess_year').val();
+    var status = $('#assess_status').val();
+    var course = $('#assess_course').val();
     if (sy1!=null && sem1!=null && level1!=null ) {
       $.ajax({
         url: "<?php echo base_url('fees/generate') ?>",
@@ -1358,12 +1377,16 @@ $user=$ses->userRole;
       })
       .done(function(data) {
         $('#as').html("");
+        $('#as2').html("");
         console.log(data)
         var count =0;
         var counter=0;
         var counter1=0;
         var h=800;
         var w = 0
+        var oldac=0;
+        var t=0;
+        var totalpay=0;
         $.each(data, function(index, val) {
           $.each(val.student, function(index1, val1) {
             counter1+=1
@@ -1391,8 +1414,21 @@ $user=$ses->userRole;
             $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Assessment:</td><td align="right">'+tonum(parseFloat(val1.assessment))+'</td></tr>');
             $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="3">Payments:</td></tr>');
             $('#table'+val1.ssi_id+'').append('<tr><td align="left"><u>OR</u></td><td align="left"><u>Date</u></td><td align="right"><u>Amount</u></td></tr>');
-            var totalpay=0;
+
             var assess=parseFloat(val1.assessment);
+            // accntslip2
+            $('#as2').append('<tr><td style="text-align:center;" colspan="5">ACLC College of Butan City, Inc.</td></tr>');
+            $('#as2').append('<tr><td style="text-align:center;" colspan="5">HDS Building JC Aquino Ave.</td></tr>');
+            $('#as2').append('<tr><td align="left" colspan="3">Account Slip</td><td align="right" colspan="2">'+currentDate+'</td></tr>')
+            $('#as2').append('<tr style="height:20px;"><td colspan="5"></td></tr>');
+            if (val1.mname!=null) {
+              $('#as2').append('<tr><td align="left" style="width:70%;" colspan="3">Name: '+val1.lname+', '+val1.fname+' '+val1.mname.charAt(0)+'.</td><td colspan="2"> Student Class: '+status+'</td></tr>');
+            }
+            if (val1.stud_id!=null) {
+              $('#as2').append('<tr><td align="left" colspan="3">ID: '+val1.stud_id+'</td><td colspan="2">  SY: '+sy1+' Sem: '+sem1+'</td></tr>');
+            }
+            $('#as2').append('<tr><td align="left" colspan="3">Course: '+course+'</td><td colspan="2">   Year Level: '+year+'</td></tr>')
+            $('#as2').append('<tr style="height:20px;" colspan="5"></tr>');
             $.each(val1.payment, function(index2, val2) {
               if (val2.or!=undefined) {
                 $('#table'+val1.ssi_id+'').append('<tr><td align="left">'+val2.or+'</td><td align="left">'+val2.date+'</td><td align="right">'+tonum(parseFloat(val2.amt2))+'</td></tr>');
@@ -1484,30 +1520,115 @@ $user=$ses->userRole;
             $('#table'+val1.ssi_id+'').append('<tr><td align="center" colspan="3"><img height="35" src="<?php echo $this->config->base_url(); ?>assets/dist/img/sign.png"></div></td></tr>');//insert pic
             $('#table'+val1.ssi_id+'').append('<tr><td align="center" colspan="3"><u>ELDIE D. ENCARNADO</u></td></tr>');
             $('#table'+val1.ssi_id+'').append('<tr><td align="center" colspan="3">Accounting Coordinator</td></tr>');
+
             $.each(val1.old, function(index3, val3) {
-              var oldac=val3.oldacc2+val1.assessold;
-                  if (oldac!=0) {
-                    $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Old Account:</td><td align="right">'+tonum(parseFloat(oldac))+'</td></tr>');
-                  }
+              oldac=val3.oldacc2+val1.assessold;
+              $('#as2').append('<tr><td align="left" colspan="3" id="acoldac"></td><td colspan="2">  Assessment: '+tonum(parseFloat(val1.assessment))+'</td></tr>')
+              if (oldac!=0) {
+                $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Old Account:</td><td align="right" id="oldacnew"></td></tr>');
+              }
+            });
+              if (val1.tutorial!=null && val1.tutorial!=0) {
+                t=val1.tutorial-val1.tutorialpayment;
+              }
+              t+=val1.tutorialold;
+              $('#as2').append('<tr><td align="left" colspan="3"> Tutorial: '+tonum(parseFloat(t))+'</td><td colspan="2">  Payments: '+tonum(parseFloat(totalpay))+'</td></tr>')
+              if (t!=null && t!=0) {
+                $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Tutorial:</td><td align="right">'+tonum(parseFloat(t))+'</td></tr>');
+              }
+              var b=0;
+              if (val1.bridging!=null && val1.bridging!=0) {
+                b=val1.bridging-val1.bridgingpayment;
+              }
+              b+=val1.bridgold;
 
-                });
-                var t=0;
-                if (val1.tutorial!=null && val1.tutorial!=0) {
-                  t=val1.tutorial-val1.tutorialpayment
+              var bp = oldac+val1.assessment-totalpay;
+              oldac= oldac-t-b
+              $('#acoldac').text("Old Account: "+tonum(parseFloat(oldac)))
+              $('#oldacnew').text(tonum(parseFloat(oldac)))
+              $('#as2').append('<tr><td align="left" colspan="3"> Bridging: '+tonum(parseFloat(b))+'</td><td colspan="2">  Balance Payable: '+tonum(parseFloat(bp))+'</td></tr>');
+              if (b!=null && b!=0) {
+                $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Bridging:</td><td align="right">'+tonum(parseFloat(b))+'</td></tr>');
+              }
+              $('#as2').append('<tr style="height:20px;"><td colspan="5"></td></tr>');
+              $('#as2').append('<tr><td colspan="5"><table class="table table-sm" id="tbbd" border="1" style="width:100%;"><tbody id="tbbd1"></tbody></table></td></tr>');
+              $('#tbbd1').append('<tr><td style="width:20%" align="center">Payment Deadline</td><td style="width:10%" align="center">Term</td><td style="width:25%" align="center">Assessment</td><td style="width:25%" align="center">OldAcc/Bridging/Tutorial</td><td style="width:20%" align="center">Total</td></tr>');
+              var totalobt=oldac+t+b
+              var pertermobt=totalobt/4
+              if (val1.level=="College") {
+                var pre=(assess*parseFloat(val1.prelim))-totalpay
+                if (pre<0) {
+                  pre=0;
                 }
-                t+=val1.tutorialold;
-                if (t=null && t!=0) {
-                  $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Tutorial:</td><td align="right">'+tonum(parseFloat(t))+'</td></tr>');
+                $('#tbbd1').append('<tr><td>'+val1.dl1+'</td><td>Prelim</td><td align="center">'+tonum(parseFloat(pre))+'</td><td align="center">'+tonum(parseFloat(pertermobt))+'</td><td align="center">'+tonum(parseFloat(pre+pertermobt))+'</td></tr>');
+                var mid=(assess*parseFloat(val1.midterm))-totalpay-pre
+                if (mid<0) {
+                  mid=0;
                 }
+                $('#tbbd1').append('<tr><td>'+val1.dl2+'</td><td>Midterm</td><td align="center">'+tonum(parseFloat(mid))+'</td><td align="center">'+tonum(parseFloat(pertermobt))+'</td><td align="center">'+tonum(parseFloat(mid+pertermobt))+'</td></tr>');
+                var pref=(assess*parseFloat(val1.prefinal))-totalpay-pre-mid
+                if (pref<0) {
+                  pref=0;
+                }
+                $('#tbbd1').append('<tr><td>'+val1.dl3+'</td><td>Pre-Final</td><td align="center">'+tonum(parseFloat(pref))+'</td><td align="center">'+tonum(parseFloat(pertermobt))+'</td><td align="center">'+tonum(parseFloat(pref+pertermobt))+'</td></tr>');
+                var fin=assess-totalpay-pre-mid-pref
+                if (fin<0) {
+                  fin=0;
+                }
+                $('#tbbd1').append('<tr><td>'+val1.dl4+'</td><td>Final</td><td align="center">'+tonum(parseFloat(fin))+'</td><td align="center">'+tonum(parseFloat(pertermobt))+'</td><td align="center">'+tonum(parseFloat(fin+pertermobt))+'</td></tr>');
 
-                var b=0;
-                if (val1.bridging!=null && val1.bridging!=0) {
-                  b=val1.bridging-val1.bridgingpayment
+              }else{
+                var pre=0
+                var mid=0
+                var pref=0
+                var fin=0
+                var perterm =assess*0.25
+                if (totalpay>perterm)
+                {
+                  totalpay=totalpay-perterm
+                  pre=0
                 }
-                b+=val1.bridgold;
-                if (b!=null && b!=0) {
-                  $('#table'+val1.ssi_id+'').append('<tr><td align="left" colspan="2">Bridging:</td><td align="right">'+tonum(parseFloat(b))+'</td></tr>');
+                else
+                {
+                  pre=perterm-totalpay
+                  totalpay=0
                 }
+                $('#tbbd1').append('<tr><td>'+val1.dl1+'</td><td>Prelim</td><td align="center">'+tonum(parseFloat(pre))+'</td><td align="center">'+tonum(parseFloat(pertermobt))+'</td><td align="center">'+tonum(parseFloat(pre+pertermobt))+'</td></tr>');
+                if (totalpay>perterm)
+                {
+                  totalpay=totalpay-perterm
+                  mid=0
+                }
+                else
+                {
+                  mid=perterm-totalpay
+                  totalpay=0
+                }
+                $('#tbbd1').append('<tr><td>'+val1.dl2+'</td><td>Midterm</td><td align="center">'+tonum(parseFloat(mid))+'</td><td align="center">'+tonum(parseFloat(pertermobt))+'</td><td align="center">'+tonum(parseFloat(mid+pertermobt))+'</td></tr>');
+                if (totalpay>perterm)
+                {
+                  totalpay=totalpay-perterm
+                  pref=0
+                }
+                else
+                {
+                  pref=perterm-totalpay
+                  totalpay=0
+                }
+                $('#tbbd1').append('<tr><td>'+val1.dl3+'</td><td>Pre-Final</td><td align="center">'+tonum(parseFloat(pref))+'</td><td align="center">'+tonum(parseFloat(pertermobt))+'</td><td align="center">'+tonum(parseFloat(pref+pertermobt))+'</td></tr>');
+                if (totalpay>perterm)
+                {
+                  totalpay=totalpay-perterm
+                  fin=0
+                }
+                else
+                {
+                  fin=perterm-totalpay
+                  totalpay=0
+                }
+                $('#tbbd1').append('<tr><td>'+val1.dl4+'</td><td>Final</td><td align="center">'+tonum(parseFloat(fin))+'</td><td align="center">'+tonum(parseFloat(pertermobt))+'</td><td align="center">'+tonum(parseFloat(fin+pertermobt))+'</td></tr>');
+
+              }
 
             $('#table'+val1.ssi_id+'').append('</table>');
 

@@ -74,7 +74,7 @@
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#feesched" data-toggle="tab"><i class="fa fa-calendar"></i> Fee Schedule</a></li>
-              <li><a href="#accountslip" data-toggle="tab"><i class="fa fa-reorder"></i> Account Slip</a></li>
+              <!-- <li><a href="#accountslip" data-toggle="tab"><i class="fa fa-reorder"></i> Account Slip</a></li> -->
               <li><a href="#collectionreport" data-toggle="tab"><i class="fa fa-folder-o"></i> Collection Report</a></li>
             </ul>
             <div class="tab-content">
@@ -104,6 +104,18 @@
                               <option value="December" >December</option>
                             </select>
                             <span class="text-danger"><?php echo form_error('month'); ?></span>
+                          </div>
+                          <div class="form-group">
+                            <label for="year">Day *</label>
+                            <select class="form-control" name="day" id="day">
+                              <option selected="true" disabled="disabled">Choose Day</option>
+                              <?php
+                              for ($i=1; $i <= 31; $i++) {
+                                echo'<option value="'.$i.'" >'.$i.'</option>';
+                              }
+                              ?>
+                            </select>
+                            <span class="text-danger"><?php echo form_error('day'); ?></span>
                           </div>
                           <div class="form-group">
                             <label for="year">Year *</label>
@@ -270,7 +282,7 @@
                 </div>
 
               </div>
-              <div class="tab-pane active" id="collectionreport">
+              <div class="tab-pane " id="collectionreport">
                 <div class="row">
                   <div class="col-md-2">
                     <div class="form-group">
