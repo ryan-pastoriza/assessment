@@ -105,6 +105,10 @@ function date_time(id)
 }
 </script>
 <style type="text/css">
+#hideamt1,#hideamt2{
+	text-align:right;
+}
+
 #date_time{
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
@@ -147,15 +151,15 @@ function date_time(id)
   background: transparent !important;
 }
 @media print {
-    
+
     #tbmain2 {
-        font-size: 11px;       
+        font-size: 11px;
     }
     #tbmain3 {
-        font-size: 11px;        
+        font-size: 11px;
     }
     #tbmain4 {
-        font-size: 16px;        
+        font-size: 16px;
     }
 }
 </style>
