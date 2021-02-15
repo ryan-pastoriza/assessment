@@ -41,22 +41,27 @@
       </div>
       <ul class="sidebar-menu">
         <li class="header"><b>MAIN NAVIGATION</b></li>
-        <li id="access_tab">
-          <a href="<?php echo site_url('fees') ?>"><i class="glyphicon glyphicon-barcode">
+        <li class="active" id="access_tab">
+          <a href="<?php echo site_url('fees2') ?>"><i class="glyphicon glyphicon-barcode">
             </i> <span>Fees</span></a>
         </li>
         <li id="access_tab">
           <a href="<?php echo site_url('particular') ?>"><i class="fa fa-dropbox">
             </i> <span>Particulars</span></a>
         </li>
-        <li class="active" id="access_tab">
-          <a href="<?php echo site_url('reports') ?>"><i class="fa fa-calendar">
-            </i> <span>Schedule</span></a>
-        </li>
-        <li id="access_tab">
-          <a href="<?php echo site_url('users') ?>"><i class="fa fa-users">
-            </i> <span>Users</span></a>
-        </li>
+        <?php if ($_SESSION['user']->userRole=="Accounting" OR  $_SESSION['user']->userRole=="Admin"): ?>
+          <li id="access_tab">
+            <a href="<?php echo site_url('reports') ?>"><i class="fa fa-calendar">
+              </i> <span>Schedule</span></a>
+          </li>
+        <?php endif; ?>
+        <?php if ($_SESSION['user']->userRole=="Admin"): ?>
+          <li id="access_tab">
+            <a href="<?php echo site_url('users') ?>"><i class="fa fa-users">
+              </i> <span>Users</span></a>
+          </li>
+        <?php endif; ?>
+
       </ul>
     </section>
   </aside>
@@ -80,12 +85,21 @@
             <div class="tab-content">
               <div class="tab-pane active" id="feesched">
                   <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-12">
                       <div class="box-header with-border">
                         <h3 class="box-title">Create Fee Schedule</h3>
                       </div>
                       <?php echo form_open('reports/create'); ?>
                         <div class="box-body">
+                          <div class="form-group">
+                            <label>Payment date range:</label>
+                            <div class="input-group">
+                              <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                              </div>
+                              <input type="text" class="form-control pull-right" id="reservation" name="reservation">
+                            </div>
+                          </div>
                           <div class="form-group">
                             <label for="month">Month *</label>
                             <select class="form-control" name="month">
@@ -104,18 +118,6 @@
                               <option value="December" >December</option>
                             </select>
                             <span class="text-danger"><?php echo form_error('month'); ?></span>
-                          </div>
-                          <div class="form-group">
-                            <label for="year">Day *</label>
-                            <select class="form-control" name="day" id="day">
-                              <option selected="true" disabled="disabled">Choose Day</option>
-                              <?php
-                              for ($i=1; $i <= 31; $i++) {
-                                echo'<option value="'.$i.'" >'.$i.'</option>';
-                              }
-                              ?>
-                            </select>
-                            <span class="text-danger"><?php echo form_error('day'); ?></span>
                           </div>
                           <div class="form-group">
                             <label for="year">Year *</label>
@@ -194,7 +196,7 @@
                         </div>
                       </form>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-12">
                       <div class="box-header with-border">
                         <h3 class="box-title">Schedules</h3>
                       </div>
@@ -288,15 +290,15 @@
                     <div class="form-group">
                       <select class="form-control" name="month1" id="month1">
                         <option selected="true" disabled="disabled">Choose Month</option>
-                        <option value="1" >January</option>
-                        <option value="2" >February</option>
-                        <option value="3" >March</option>
-                        <option value="4" >April</option>
-                        <option value="5" >May</option>
-                        <option value="6" >June</option>
-                        <option value="7" >July</option>
-                        <option value="8" >August</option>
-                        <option value="9" >September</option>
+                        <option value="01" >January</option>
+                        <option value="02" >February</option>
+                        <option value="03" >March</option>
+                        <option value="04" >April</option>
+                        <option value="05" >May</option>
+                        <option value="06" >June</option>
+                        <option value="07" >July</option>
+                        <option value="08" >August</option>
+                        <option value="09" >September</option>
                         <option value="10" >October</option>
                         <option value="11" >November</option>
                         <option value="12" >December</option>
@@ -320,10 +322,19 @@
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
-                      <button type="submit" class="btn btn-primary" id="transfercollection">Transfer Collection</button><h5 id="status"></h5>
+                      <button type="submit" class="btn btn-primary" id="generatecollection">Generate Collection</button><h5 id="status2"></h5>
                     </div>
                   </div>
-
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-primary" id="transfercollection">Transfer collection old to new</button><h5 id="status1"></h5>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-primary" id="transoldtodaily">Transfer daily to collection1 (old)</button><h5 id="status3"></h5>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -344,7 +355,15 @@
   </footer>
   <div class="control-sidebar-bg"></div>
   </div>
+  <script src="<?php echo $this->config->base_url(); ?>/assets/bower_components/moment/min/moment.min.js"></script>
+  <script src="<?php echo $this->config->base_url(); ?>/assets/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+  <!-- bootstrap datepicker -->
+  <script src="<?php echo $this->config->base_url(); ?>/assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
   <script>
+  $('.datepicker').datepicker({
+    autoclose: true
+  })
+  $('#reservation').daterangepicker()
   var fullDate = new Date()
   var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : + (fullDate.getMonth()+1);
   var currentDate =  twoDigitMonth + "/" + fullDate.getDate()+ "/" + fullDate.getFullYear();
@@ -352,7 +371,7 @@
     var year2 = $('#year1').val();
     var month2 = $('#month1').val();
     if (year2!=null   && month2!=null) {
-      $("#status").text('  Generating...');
+      $("#status1").text('  Generating...');
       $.ajax({
         url: "<?php echo base_url('reports/transfercollection') ?>",
         type: 'GET',
@@ -363,13 +382,60 @@
         $.each(data, function(index, val) {
 
         });
-        $("#status").text('  Done!');
+        $("#status1").text('  Done!');
       })
       .fail(function(data) {
-        $("#status").text('  Error!');
+        $("#status1").text('  Error!');
       })
     }
   });
+  $(document).on('click','#transoldtodaily',function(){
+    var year2 = $('#year1').val();
+    var month2 = $('#month1').val();
+    if (year2!=null   && month2!=null) {
+      $("#status3").text('  Generating...');
+      $.ajax({
+        url: "<?php echo base_url('reports/transoldtodaily') ?>",
+        type: 'GET',
+        dataType: 'JSON',
+        data: {month: month2,year: year2}
+      })
+      .done(function(data) {
+        console.log(data)
+        $.each(data, function(index, val) {
+
+        });
+        $("#status3").text('  Done!');
+      })
+      .fail(function(data) {
+        $("#status3").text('  Error!');
+      })
+    }
+  });
+  $(document).on('click','#generatecollection',function(){
+    var year2 = $('#year1').val();
+    var month2 = $('#month1').val();
+    if (year2!=null   && month2!=null) {
+      $("#status2").text('  Generating...');
+      $.ajax({
+        url: "<?php echo base_url('reports/generatecollection') ?>",
+        type: 'GET',
+        dataType: 'JSON',
+        data: {month: month2,year: year2}
+      })
+      .done(function(data) {
+        console.log(data)
+        $.each(data, function(index, val) {
+
+        });
+        $("#status2").text('  Done!');
+      })
+      .fail(function(data) {
+        $("#status2").text('  Error!');
+      })
+    }
+  });
+  //generate account slip. old
   $(document).on('click','#generate',function(){
     var sy1 = $('#sygen').val();
     var sem1 = $('#semgen').val();

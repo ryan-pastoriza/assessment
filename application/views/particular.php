@@ -41,22 +41,27 @@
       </div>
       <ul class="sidebar-menu">
         <li class="header"><b>MAIN NAVIGATION</b></li>
-        <li id="access_tab">
-          <a href="<?php echo site_url('fees') ?>"><i class="glyphicon glyphicon-barcode">
+        <li class="active" id="access_tab">
+          <a href="<?php echo site_url('fees2') ?>"><i class="glyphicon glyphicon-barcode">
             </i> <span>Fees</span></a>
         </li>
-        <li class="active" id="access_tab">
+        <li id="access_tab">
           <a href="<?php echo site_url('particular') ?>"><i class="fa fa-dropbox">
             </i> <span>Particulars</span></a>
         </li>
-        <li id="access_tab">
-          <a href="<?php echo site_url('reports') ?>"><i class="fa fa-calendar">
-            </i> <span>Schedule</span></a>
-        </li>
-        <li id="access_tab">
-          <a href="<?php echo site_url('users') ?>"><i class="fa fa-users">
-            </i> <span>Users</span></a>
-        </li>
+        <?php if ($_SESSION['user']->userRole=="Accounting" OR  $_SESSION['user']->userRole=="Admin"): ?>
+          <li id="access_tab">
+            <a href="<?php echo site_url('reports') ?>"><i class="fa fa-calendar">
+              </i> <span>Schedule</span></a>
+          </li>
+        <?php endif; ?>
+        <?php if ($_SESSION['user']->userRole=="Admin"): ?>
+          <li id="access_tab">
+            <a href="<?php echo site_url('users') ?>"><i class="fa fa-users">
+              </i> <span>Users</span></a>
+          </li>
+        <?php endif; ?>
+
       </ul>
     </section>
   </aside>
@@ -95,7 +100,7 @@
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="courseType">Course Type *</label>
+                  <label for="courseType">Course Type</label>
                   <select class="form-control courseType" id="courseType" name="courseType" style="width: 100%;" placeholder="Select Course Type">
                     <option value=""></option>
                     <option value="1">others</option>
@@ -128,12 +133,24 @@
                     <option value="regular">Regular</option>
                     <option value="special">Special</option>
                   </select>
-                  <span class="text-danger"><?php echo form_error('sem'); ?></span>
+                  <span class="text-danger"><?php echo form_error('billType'); ?></span>
+                </div>
+                <div class="form-group">
+                  <label for="priority">Priority</label>
+                  <select class="form-control priority" id="priority" name="priority" style="width: 100%;" placeholder="Select priority">
+                    <option value=""></option>
+                    <?php
+                    for ($i=1; $i < 30; $i++) {
+                      echo '<option value="'.$i.'">'.$i.'</option>';
+                    }
+                    ?>
+                  </select>
+                  <span class="text-danger"><?php echo form_error('priority'); ?></span>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="studentStatus">Student Status *</label>
+                  <label for="studentStatus">Student Status</label>
                   <select class="form-control studentStatus" id="studentStatus" name="studentStatus" style="width: 100%;" placeholder="Select Student Status">
                     <option value=""></option>
                     <option value="New">New</option>
@@ -158,8 +175,6 @@
                   </select>
                   <span class="text-danger"><?php echo form_error('sem'); ?></span>
                 </div>
-              </div>
-              <div class="col-md-8">
               </div>
               <div class="col-md-4">
                 <div class="form-group">

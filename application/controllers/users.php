@@ -8,6 +8,7 @@ class Users extends CI_Controller {
 		parent::__construct();
 		$this->load->library('form_validation');
 		$this->load->model('main_model');
+    $this->load->model('model');
         if (!$this->session->userdata('user'))
         {
             redirect("login");
@@ -23,6 +24,9 @@ class Users extends CI_Controller {
         $this->load->view('templates/footer');
 	}
 	public function delete($id){
+    $ses=$this->session->userdata('user');
+    $user=$ses->userRole;
+    $this->model->logs($user,"delete user");
 		$this->main_model->deleteuser($id);
 		redirect("users");
 	}
@@ -38,15 +42,24 @@ class Users extends CI_Controller {
 		}
 		else
 		{
+      $ses=$this->session->userdata('user');
+      $user=$ses->userRole;
+      $this->model->logs($user,"create user");
 			$this->main_model->saveuser();
 			redirect("users");
 		}
 	}
 	public function update($id){
+    $ses=$this->session->userdata('user');
+    $user=$ses->userRole;
+    $this->model->logs($user,"update user");
 		$this->main_model->updateuser($id);
 		$this->index();
+	}
+  public function savemastercode(){
+    $mastercode = $_GET['mastercode'];
+		echo $this->model->savemastercode($mastercode);
 	}
 
 
 }
-

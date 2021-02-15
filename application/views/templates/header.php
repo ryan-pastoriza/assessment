@@ -105,6 +105,32 @@ function date_time(id)
 }
 </script>
 <style type="text/css">
+#error-container {
+		position: fixed;
+		top: 10px;
+		right: 20px;
+		width: 500px;
+		z-index: 99999;
+}
+.overlay {
+    background-color:#EFEFEF;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    top: 0px;
+    left: 0px;
+    opacity: .5; /* in FireFox */
+    filter: alpha(opacity=50); /* in IE */
+}
+.loadingimg {
+		width: 50px;
+		display: block;
+		margin-left: auto;
+    margin-right: auto;
+		margin-top: 300px;
+    margin-bottom: : auto;
+}
 #hideamt1,#hideamt2{
 	text-align:right;
 }
@@ -150,16 +176,20 @@ function date_time(id)
 .example-modal .modal {
   background: transparent !important;
 }
+#payeelabel label {
+	color: green;
+
+}
 @media print {
 
     #tbmain2 {
-        font-size: 11px;
+        font-size: 9pt !important;
     }
     #tbmain3 {
-        font-size: 11px;
+        font-size: 9pt !important;
     }
     #tbmain4 {
-        font-size: 16px;
+        font-size: 9pt !important;
     }
 }
 </style>

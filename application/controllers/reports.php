@@ -8,6 +8,7 @@ class Reports extends CI_Controller {
 		parent::__construct();
 		$this->load->library('form_validation');
 		$this->load->model('main_model');
+    $this->load->model('model');
         if (!$this->session->userdata('user'))
         {
             redirect("login");
@@ -22,15 +23,13 @@ class Reports extends CI_Controller {
         $this->load->view('reports',$data);
         $this->load->view('templates/footer');
 	}
-	public function logout(){
-		$this->session->unset_userdata('user');
-        redirect('login');
-	}
 	public function create(){
+    $ses=$this->session->userdata('user');
+    $user=$ses->userRole;
+    $this->model->logs($user,"create schedule");
 		$data['sched'] = $this->main_model->getsched();
 		$data['syId'] = $this->main_model->getsyid();
 		$this->form_validation->set_rules('month', 'Month', 'required');
-    $this->form_validation->set_rules('day', 'Day', 'required');
 		$this->form_validation->set_rules('year', 'Year', 'required');
 		$this->form_validation->set_rules('percent', 'Percent', 'required');
 		$this->form_validation->set_rules('term', 'Term', 'required');
@@ -58,7 +57,20 @@ class Reports extends CI_Controller {
 		$year = $_GET['year'];
 		echo $this->main_model->transfercollection($month,$year);
 	}
+  public function transoldtodaily(){
+		$month = $_GET['month'];
+		$year = $_GET['year'];
+		echo $this->main_model->transoldtodaily($month,$year);
+	}
+  public function generatecollection(){
+		$month = $_GET['month'];
+		$year = $_GET['year'];
+		echo $this->main_model->generatecollection($month,$year);
+	}
   public function delete($id){
+    $ses=$this->session->userdata('user');
+    $user=$ses->userRole;
+    $this->model->logs($user,"delete schedule");
 		$this->main_model->deletesched($id);
 		$this->index();
 	}

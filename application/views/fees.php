@@ -43,7 +43,7 @@
       <ul class="sidebar-menu">
         <li class="header"><b>MAIN NAVIGATION</b></li>
         <li class="active" id="access_tab">
-          <a href="<?php echo site_url('fees') ?>"><i class="glyphicon glyphicon-barcode">
+          <a href="<?php echo site_url('fees2') ?>"><i class="glyphicon glyphicon-barcode">
             </i> <span>Fees</span></a>
         </li>
         <li id="access_tab">
@@ -145,9 +145,6 @@
                   <div class="row" id="toprint">
                     <table class="table table-sm" id="tbmain" >
                       <tbody id="as">
-                        <tr>
-                          <td></td>
-                        </tr>
                       </tbody>
 
                     </table>
@@ -902,7 +899,6 @@ $user=$ses->userRole;
         $('#assessmentlisto').append("<tr><td></td><td></td><td align='right'>CURRENT BALANCE:</td><td align='right'>"+tonum(parseFloat(cbal2))+"</td></tr>");
       });
       generate(id,sy,sem,level)
-
     })
     .fail(function() {
       console.log("error2 ");
@@ -998,6 +994,8 @@ $user=$ses->userRole;
     var sem = $('#sem').val();
     var sem2 ="";
     var stud = false;
+
+
     if (sem=="1st") {
       sem2 = "First Semester"
     }else{
@@ -1019,8 +1017,9 @@ $user=$ses->userRole;
         var age=""
         $('#rf2').html("");
         $('#rf2').append('<tr><td width="35px" height="50px"></td><td width="40px"></td><td width="50px"></td><td width="50px"></td><td width="50px"></td><td width="50px"></td><td width="35px"></td><td width="35px"></td><td width="120px"></td><td width="80px"></td><td width="100px"></td></tr>');
-        $('#rf1').html("");
+
         $('#tbmain3').html("");
+        $('#rf1').html("");
         $('#rf1').append('<tr><td width="70px" height="80px"></td><td width="92px"></td><td width="90px"></td><td width="35px"></td><td width="48px"></td><td width="50px"></td><td width="60px"></td><td width="48px"></td><td width="60px"></td><td width="78px"></td><td width="62px"></td><td width="86px"></td></tr>');
         $("#studload").html("");
         $("#enrolledtable").html("");
@@ -1069,12 +1068,6 @@ $user=$ses->userRole;
               $('#rgcourse').append(val1.course);
               $('#sysem').html('<i class="glyphicon glyphicon-calendar"></i> '+val1.sem+' '+val1.sy+'');
               $('#stat').html("<i class='glyphicon glyphicon-education'></i> "+val1.current_stat);
-              $('#reassess').show();
-              if ($('#assess_level').val()=="Senior High") {
-                $('#discount').hide();
-              } else {
-                $('#discount').show();
-              }
               $('#print').show();
               $('#print2').show();
               $('#print3').show();
@@ -1087,6 +1080,23 @@ $user=$ses->userRole;
               $('#studclass').text(val1.current_stat);
               $('#rgsem').text(val1.sem);
               $('#rgsy').text(val1.sy);
+              if ($('#assess_level').val()=="Senior High" && $('#assess_sem').val()=="2nd") {
+                $('#reassess').hide();
+                $('#discount').hide();
+                $('#print').hide();
+                $('#print2').hide();
+                $('#print3').hide();
+              } else {
+                if (level=="Senior High") {
+                  $('#discount').hide();
+                } else {
+                  $('#discount').show();
+                }
+                $('#reassess').show();
+                $('#print').show();
+                $('#print2').show();
+                $('#print3').show();
+              }
             }else{
               $('#enrollmentstatus').attr('class','text-danger');
               $('#enrollmentstatus').html("<i class='glyphicon glyphicon-remove alert-primary'></i> Not Enrolled");
@@ -1212,6 +1222,7 @@ $user=$ses->userRole;
           $('#paymentstable').append("<tr><td></td><td></td><td></td><td></td><td></td><td>____________</td></tr>");
           $('#paymentstable').append("<tr><td></td><td></td><td></td><td></td><td>TOTAL: </td><td>"+amtt+"</td></tr>");
           $('#assess_flow').val(val.efsm_id);
+
         });
         loadassess(id,sy,sem,level);
       })
@@ -1542,8 +1553,7 @@ $user=$ses->userRole;
               }
               b+=val1.bridgold;
 
-              var bp = oldac+val1.assessment-totalpay;
-              oldac= oldac-t-b
+              var bp = oldac+val1.assessment-totalpay+(t+b);
               $('#acoldac').text("Old Account: "+tonum(parseFloat(oldac)))
               $('#oldacnew').text(tonum(parseFloat(oldac)))
               $('#as2').append('<tr><td align="left" colspan="3"> Bridging: '+tonum(parseFloat(b))+'</td><td colspan="2">  Balance Payable: '+tonum(parseFloat(bp))+'</td></tr>');
@@ -1552,7 +1562,7 @@ $user=$ses->userRole;
               }
               $('#as2').append('<tr style="height:20px;"><td colspan="5"></td></tr>');
               $('#as2').append('<tr><td colspan="5"><table class="table table-sm" id="tbbd" border="1" style="width:100%;"><tbody id="tbbd1"></tbody></table></td></tr>');
-              $('#tbbd1').append('<tr><td style="width:20%" align="center">Payment Deadline</td><td style="width:10%" align="center">Term</td><td style="width:25%" align="center">Assessment</td><td style="width:25%" align="center">OldAcc/Bridging/Tutorial</td><td style="width:20%" align="center">Total</td></tr>');
+              $('#tbbd1').append('<tr><td style="width:25%" align="center">Schedule of Payment</td><td style="width:10%" align="center">Term</td><td style="width:20%" align="center">Assessment</td><td style="width:25%" align="center">OldAcc/Bridging/Tutorial</td><td style="width:20%" align="center">Total</td></tr>');
               var totalobt=oldac+t+b
               var pertermobt=totalobt/4
               if (val1.level=="College") {

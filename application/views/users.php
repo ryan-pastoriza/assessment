@@ -14,14 +14,14 @@
                 <span id="date_time" form-control></span>
                 <script type="text/javascript">window.onload = date_time('date_time');</script>
               </i>
-            </a>  
+            </a>
           </li>
           <li>
           <a href="<?php echo site_url('dashboard/logout/').$_SESSION['user']->userId; ?>" style="cursor: default;">
               <i class="fa fa-power-off">
 
               </i>
-            </a>  
+            </a>
           </li>
         </ul>
       </div>
@@ -41,22 +41,27 @@
       </div>
       <ul class="sidebar-menu">
         <li class="header"><b>MAIN NAVIGATION</b></li>
-        <li id="access_tab">
-          <a href="<?php echo site_url('fees') ?>"><i class="glyphicon glyphicon-barcode">
+        <li class="active" id="access_tab">
+          <a href="<?php echo site_url('fees2') ?>"><i class="glyphicon glyphicon-barcode">
             </i> <span>Fees</span></a>
         </li>
         <li id="access_tab">
           <a href="<?php echo site_url('particular') ?>"><i class="fa fa-dropbox">
             </i> <span>Particulars</span></a>
         </li>
-        <li id="access_tab">
-          <a href="<?php echo site_url('reports') ?>"><i class="fa fa-calendar">
-            </i> <span>Schedule</span></a>
-        </li>
-        <li class="active" id="access_tab">
-          <a href="<?php echo site_url('users') ?>"><i class="fa fa-users">
-            </i> <span>Users</span></a>
-        </li>
+        <?php if ($_SESSION['user']->userRole=="Accounting" OR  $_SESSION['user']->userRole=="Admin"): ?>
+          <li id="access_tab">
+            <a href="<?php echo site_url('reports') ?>"><i class="fa fa-calendar">
+              </i> <span>Schedule</span></a>
+          </li>
+        <?php endif; ?>
+        <?php if ($_SESSION['user']->userRole=="Admin"): ?>
+          <li id="access_tab">
+            <a href="<?php echo site_url('users') ?>"><i class="fa fa-users">
+              </i> <span>Users</span></a>
+          </li>
+        <?php endif; ?>
+
       </ul>
     </section>
   </aside>
@@ -102,6 +107,18 @@
                   <button type="submit" class="btn btn-primary">Save</button>
                 </div>
               </form>
+              <?php if ($_SESSION['user']->userRole=="Admin"): ?>
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="mastercode">MasterCode</label>
+                  <input type="text" class="form-control" id="mastercode" placeholder="Enter MasterCode">
+                  <span class="text-danger"><?php echo form_error('mastercode'); ?></span>
+                </div>
+              </div>
+              <div class="box-footer">
+                <button id="savemastercode" class="btn btn-primary">Save</button>
+              </div>
+              <?php endif; ?>
             </div>
           </div>
         </div>
@@ -121,14 +138,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                 
+
                     <?php foreach ($users as $item):?>
                     <tr>
                     <td><?php echo $item->username;?></td>
                     <td><?php echo $item->userRole;?></td>
                     <td>
-                    <?php 
-                    if ($item->userStatus=="Online") 
+                    <?php
+                    if ($item->userStatus=="Online")
                     {
                       echo '<span class="label label-success">Online</span>';
                     }else{
@@ -138,10 +155,10 @@
                     </td>
                     <td>
                       <a href="#" data-toggle="modal" data-target="#modal-info<?php echo $item->userId; ?>">
-                        <span style="color:blue" class="fa fa-edit "></span> 
+                        <span style="color:blue" class="fa fa-edit "></span>
                       </a>
                       <!-- <a href="users/delete/<?php echo $item->userId;?>">
-                        <span style="color:#CC0000" class="glyphicon glyphicon-trash"></span> 
+                        <span style="color:#CC0000" class="glyphicon glyphicon-trash"></span>
                       </a> -->
                       <div class="modal  fade" id="modal-info<?php echo $item->userId; ?>">
                         <div class="modal-dialog modal-sm">
@@ -159,7 +176,7 @@
                                       <div class="form-group">
                                         <label for="Username">Username</label>
                                         <input style="width:240px;" type="text" class="form-control" name="username<?php echo $item->userId; ?>" value="<?php echo $item->username;?>">
-                                        
+
                                       </div>
                                     </div>
                                   </div>
@@ -168,7 +185,7 @@
                                       <div class="form-group">
                                         <label for="exampleInputPassword1">Password *</label>
                                         <input style="width:240px;" type="password" class="form-control" name="password<?php echo $item->userId; ?>" >
-                                        
+
                                         </div>
                                     </div>
                                   </div>
@@ -197,7 +214,7 @@
                                           }
                                           ?>
                                         </select>
-                                        
+
                                         </div>
                                     </div>
                                   </div>
@@ -211,19 +228,19 @@
                         </div>
                       </div>
                     </td>
-                    
+
                     </tr>
                     <?php endforeach;?>
-                  
+
                 </tbody>
               </table>
             </div>
           </div>
         </div>
-      </div>  
+      </div>
     </section>
   </div>
-  
+
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.0
@@ -233,3 +250,22 @@
   </footer>
   <div class="control-sidebar-bg"></div>
   </div>
+<script type="text/javascript">
+$(document).on('click','#savemastercode',function(){
+  var mastercode = $("#mastercode").val();
+  $.ajax({
+    url: "<?php echo base_url('users/savemastercode') ?>",
+    type: 'GET',
+    dataType: 'JSON',
+    data: {mastercode: mastercode},
+  })
+  .done(function(data) {
+      console.log(data);
+      $("#mastercode").val("");
+  })
+  .fail(function() {
+    console.log("error ");
+  })
+});
+
+</script>

@@ -399,7 +399,6 @@ class Main_model extends CI_Model
 
 			}
 		}
-
 		$query1 = $DB2->query("SELECT
       stud_sch_info.ssi_id,
       stud_per_info.lname,
@@ -535,7 +534,7 @@ class Main_model extends CI_Model
 								course.`status` = '{$status}' LIMIT 1)) as `amt`
 						From
 							tbl_stud_load
-						INNER JOIN tbl__subj ON tbl_stud_load.Subject_code = tbl_bridging_subj.Subject_code
+						INNER JOIN tbl_bridging_subj ON tbl_stud_load.Subject_code = tbl_bridging_subj.Subject_code
 						INNER JOIN tbl_schedule ON tbl_stud_load.Subject_code = tbl_schedule.Subject_code
 						Where
 							tbl_bridging_subj.sem = '{$sem}' AND
@@ -1031,8 +1030,10 @@ class Main_model extends CI_Model
 			{
 				foreach ($misc->result() as $row1)
 				{
-					$totalass1+=$row1->amt1;
-					$totalass2+=$row1->amt2;
+          if ($row1->particularName!="Online Fee") {
+            $totalass1+=$row1->amt1;
+            $totalass2+=$row1->amt2;
+          }
 					$this->insertpar($id,$row1->particularName,$row1->amt1,$row1->amt2,$row1->feeType,$semid,$syid,$collectionReportGroup);
 				}
 			}
@@ -1066,16 +1067,16 @@ class Main_model extends CI_Model
 			{
 				foreach ($misc->result() as $row1)
 				{
-					$totalass1+=$row1->amt1;
-					$totalass2+=$row1->amt2;
+          if ($row1->particularName!="Online Fee") {
+            $totalass1+=$row1->amt1;
+            $totalass2+=$row1->amt2;
+          }
 					$this->insertpar($id,$row1->particularName,$row1->amt1,$row1->amt2,$row1->feeType,$semid,$syid,$row1->collectionReportGroup);
 				}
 			}
 
 			//lab subject
-      $this->db->delete('assessment', array('ssi_id' => $id,'syid' => $syid,'semId' => $semid,'feeType' => 'Laboratory'));
-			$lab1=0;
-			$lab2=0;
+      // $this->db->delete('assessment', array('ssi_id' => $id,'syid' => $syid,'semId' => $semid,'feeType' => 'Laboratory'));
 			$data2=array();
 			$lab = $this->db->query("SELECT
 				particulars.amt1,
@@ -1099,6 +1100,8 @@ class Main_model extends CI_Model
 				{
 					$labfee1=0;
 					$labfee2=0;
+          $lab1=0;
+    			$lab2=0;
 					$labname="";
 					$query4 = $DB2->query("SELECT
             subject_enrolled.ss_id,
@@ -1109,7 +1112,9 @@ class Main_model extends CI_Model
           WHERE (subject_enrolled_status.`status` = 'enrolled' OR
             subject_enrolled_status.`status` = 'add' OR
             subject_enrolled_status.`status` = 'change') AND
-						subject_enrolled.ssi_id ='{$id}'");
+						subject_enrolled.ssi_id ='{$id}'AND
+						subject_enrolled.sch_year = '{$sy}' AND
+						subject_enrolled.semester = '{$sem}'");
 					if ($query4->num_rows() > 0)
 					{
 						foreach ($query4->result() as $row4)
@@ -1137,6 +1142,8 @@ class Main_model extends CI_Model
                   $subj_namen=$row4->subj_name;
 									$lab1+=$labfee1;
 									$lab2+=$labfee2;
+                  $totalass1+=$labfee1;
+            			$totalass2+=$labfee2;
 								}
 							}
 						}
@@ -1149,8 +1156,11 @@ class Main_model extends CI_Model
 				}
 
 			}
-			$totalass1+=$lab1;
-			$totalass2+=$lab2;
+      else
+      {
+        $this->db->delete('assessment', array('ssi_id' => $id,'syid' => $syid,'semId' => $semid,'feeType' => 'Laboratory'));
+      }
+
 
 			// if ($stat=="new")
 			// {
@@ -1493,6 +1503,87 @@ class Main_model extends CI_Model
 		$oldaccount[]=["oldacc1"=>$total1,"oldacc2"=>$total2];
 		return $oldaccount;
 	}
+  function oldaccount2($id,$sy,$sem)
+	{
+		$oldaccount=array();
+		$assess1=0;
+		$assess2=0;
+		$discount1=0;
+		$discount2=0;
+		$payments1=0;
+		$payments2=0;
+		$query = $this->db->query("SELECT
+			SUM(assessment.amt1) AS amt1,
+			SUM(assessment.amt2) AS amt2
+		FROM
+			assessment
+		INNER JOIN sy ON assessment.syId = sy.syId
+		INNER JOIN sem ON assessment.semId = sem.semId
+		WHERE
+			assessment.ssi_id = '{$id}' AND
+			(sy.sy <> '{$sy}' OR
+			sem.sem <> '{$sem}') AND
+      (assessment.feeType <> 'Handling Fee' AND
+      assessment.feeType <> 'Tutorial' AND
+      assessment.feeType <> 'Bridging')");
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				$assess1=$row->amt1;
+				$assess2=$row->amt2;
+			}
+		}
+
+		$query1 = $this->db->query("SELECT
+			SUM(discount.amt1) AS amt1,
+			SUM(discount.amt2) AS amt2
+		FROM
+			discount
+		INNER JOIN sem ON discount.semId = sem.semId
+		INNER JOIN sy ON discount.syId = sy.syId
+		WHERE
+			discount.ssi_id = '{$id}' AND
+			(sem.sem <> '{$sem}' OR
+			sy.sy <> '{$sy}')");
+		if ($query1->num_rows() > 0)
+		{
+			foreach ($query1->result() as $row1)
+			{
+				$discount1=$row1->amt1;
+				$discount2=$row1->amt2;
+			}
+		}
+
+		$query2 = $this->db->query("SELECT DISTINCT
+			Sum(paymentdetails.amt1) AS amt1,
+			Sum(paymentdetails.amt2) AS amt2
+		FROM
+			payments
+		INNER JOIN sem ON payments.semId = sem.semId
+		INNER JOIN sy ON payments.syId = sy.syId
+		INNER JOIN paymentdetails ON paymentdetails.paymentId = payments.paymentId
+		INNER JOIN assessment ON paymentdetails.assessmentId = assessment.assessmentId
+		WHERE
+			payments.ssi_id = '{$id}' AND
+			(sem.sem <> '{$sem}' OR
+			sy.sy <> '{$sy}') AND
+      (assessment.feeType <> 'Handling Fee' AND
+      assessment.feeType <> 'Tutorial' AND
+      assessment.feeType <> 'Bridging')");
+		if ($query2->num_rows() > 0)
+		{
+			foreach ($query2->result() as $row2)
+			{
+				$payments1=$row2->amt1;
+				$payments2=$row2->amt2;
+			}
+		}
+		$total1=$assess1-$discount1-$payments1;
+		$total2=$assess2-$discount2-$payments2;
+		$oldaccount[]=["oldacc1"=>$total1,"oldacc2"=>$total2];
+		return $oldaccount;
+	}
   // generate tuition new
 	function getStudentTuition($id,$sy,$sem)
 	{
@@ -1592,6 +1683,8 @@ class Main_model extends CI_Model
   // transfer colectin report old to new
   function transfercollection($month,$year)
   {
+    $m=(int)$month;
+    ini_set('max_execution_time', '0');
     $DB4 = $this->load->database('db4', TRUE);
     $data=array();
     $query = $DB4->query("SELECT
@@ -1709,6 +1802,32 @@ class Main_model extends CI_Model
         }
       }
     }
+    $query1 = $DB4->query("SELECT
+      CONCAT(students.last,' ',students.`first`,' ',students.middle) AS `name`,
+      collection_report_daily.`or`,
+      collection_report_daily.date,
+      collection_report_daily.particular,
+      collection_report_daily.amt,
+      IFNULL(check_cr_group.group,'others') AS `crgroup`
+    FROM
+      collection_report_daily
+    LEFT JOIN students ON collection_report_daily.acctno = students.acctno
+    LEFT JOIN check_cr_group ON collection_report_daily.particular = check_cr_group.particular
+    WHERE
+      collection_report_daily.`month` = '{$month}' AND
+      collection_report_daily.`year` = '{$year}'
+    ORDER BY
+      collection_report_daily.date asc,
+      collection_report_daily.`or` asc");
+    if ($query1->num_rows() > 0)
+    {
+      foreach ($query1->result() as $row1)
+      {
+        $this->insertcollectiondaily($row1->name,$row1->or,$row1->date,$row1->particular,$row1->amt,$row1->crgroup,$m,$year);
+      }
+    }
+
+    $data[]=['Done'=>'yes'];
     return json_encode($data);
   }
   function getparticularOR($acctno,$or)
@@ -1730,6 +1849,229 @@ class Main_model extends CI_Model
       }
     }
     return $part;
+  }
+  //transfer old daily to old collection_report1
+  function transoldtodaily($month,$year)
+  {
+    $m=(int)$month;
+    ini_set('max_execution_time', '0');
+    $DB4 = $this->load->database('db4', TRUE);
+    $DB4->delete('collection_report1', array('collection_report1.`Month`' => $m,'collection_report1.`yr`' => $year));
+    $data=array();
+    $query=$DB4->query("SELECT
+      students.acctno,
+      CONCAT(students.last,' ',students.`first`,' ',students.middle),
+      collection_report_daily.`or`,
+      collection_report_daily.date,
+      collection_report_daily.particular,
+      collection_report_daily.amt,
+      collection_report_daily.sy,
+      collection_report_daily.sem,
+      IFNULL(check_cr_group.group,'Others2') AS `crgroup`,
+      collection_report_daily.month,
+      collection_report_daily.year
+    FROM
+      collection_report_daily
+    INNER JOIN students ON students.acctno = collection_report_daily.acctno
+    LEFT JOIN check_cr_group ON collection_report_daily.particular = check_cr_group.particular
+    WHERE
+      collection_report_daily.`month` = '{$month}' AND
+      collection_report_daily.`year` = '{$year}'
+    ORDER BY
+      collection_report_daily.date ASC,
+      collection_report_daily.`or` ASC");
+    if ($query->num_rows() > 0)
+    {
+      foreach ($query->result() as $row)
+      {
+        $group=$row->crgroup;
+        $amount=$row->amt;
+
+        $query1=$DB4->query("SELECT
+          IFNULL(collection_report1.`".$group."`,0) AS `amt2`
+        FROM `collection_report1`
+        WHERE
+          collection_report1.`OR` = '{$row->or}' AND
+          collection_report1.pdate = '{$row->date}' AND
+          collection_report1.acctno = '{$row->acctno}'");
+        if ($query1->num_rows() > 0)
+        {
+          foreach ($query1->result() as $row1)
+          {
+            $data2 = array(
+              $group=>$amount+$row1->amt2,
+            );
+            $DB4->where('collection_report1.`OR`', $row->or);
+            $DB4->update('collection_report1', $data2);
+          }
+        }
+        else
+        {
+          $arr['Tuition_Fee']=0;
+          $arr['Lab_Fee']=0;
+          $arr['Internet_Fee']=0;
+          $arr['Office365']=0;
+          $arr['Miscellaneous']=0;
+          $arr['Networking']=0;
+          $arr['Physics']=0;
+          $arr['STCAB1']=0;
+          $arr['Special_Exam_50P1']=0;
+          $arr['Others1']=0;
+          $arr['Others']=0;
+          $arr['Merchandise']=0;
+          $arr['SC']=0;
+          $arr['Newsletter']=0;
+          $arr['Special_Exam_50P2']=0;
+          $arr['Others2']=0;
+          $arr['Ncc_uk']=0;
+          $arr['MS_Fee']=0;
+          $arr['STCAB2']=0;
+          $arr['E_learning']=0;
+          $arr['Cultural_fee']=0;
+          $arr['Insurance']=0;
+          $arr['oracle']=0;
+          $arr['hp']=0;
+          $arr['sap']=0;
+          $arr['seniorhigh']=0;
+          $arr['amt']=0;
+          $arr['ched_deped']=0;
+          $arr[$group]=$amount;
+          $arr['Month']=$row->month;
+          $arr['yr']=$row->year;
+          $arr['pdate']=$row->date;
+          $arr['OR']=$row->or;
+          $arr['acctno']=$row->acctno;
+          $DB4->insert('collection_report1',$arr);
+        }
+
+        $data[]=['Done'=>'yes'];
+      }
+    }
+    return json_encode($data);
+  }
+  //generate collection
+  function generatecollection($month,$year)
+  {
+    $m=(int)$month;
+    $datefrom=$year."-".$month."-01";
+    $dateto=$year."-".$month."-31";
+    ini_set('max_execution_time', '0');
+    $this->db->delete('collectionReport', array('collectionReport.`month`' => $m,'collectionReport.`year`' => $year));
+    $this->db->delete('collectionReportDaily', array('collectionReportDaily.`month`' => $m,'collectionReportDaily.`year`' => $year));
+    $data=array();
+    $query=$this->db->query("SELECT
+      CONCAT(sis_main_db.stud_per_info.lname,' ',sis_main_db.stud_per_info.fname,' ',sis_main_db.stud_per_info.mname) AS `name`,
+      acs.payments.orNo AS `orno`,
+      acs.payments.paymentDate AS `date`,
+      IFNULL(acs.assessment.particular,'none') AS `par1`,
+      IFNULL(acs.particulars.particularName,'none') AS `par2`,
+      acs.paymentdetails.amt1 AS `amt`,
+      IFNULL(acs.assessment.collectionReportGroup,'others') AS `g1`,
+      IFNULL(acs.particulars.collectionReportGroup,'others') AS `g2`
+    FROM
+      acs.payments
+    INNER JOIN acs.paymentdetails ON acs.paymentdetails.paymentId = acs.payments.paymentId
+    LEFT JOIN acs.assessment ON acs.paymentdetails.assessmentId = acs.assessment.assessmentId
+    LEFT JOIN acs.particulars ON acs.paymentdetails.particularId = acs.particulars.particularId
+    INNER JOIN sis_main_db.stud_sch_info ON acs.payments.ssi_id = sis_main_db.stud_sch_info.ssi_id
+    INNER JOIN sis_main_db.stud_per_info ON sis_main_db.stud_sch_info.spi_id = sis_main_db.stud_per_info.spi_id
+    WHERE
+      acs.payments.paymentDate BETWEEN '{$datefrom}' AND '{$dateto}'
+    ORDER BY
+      acs.payments.paymentDate ASC,
+      acs.payments.orNo ASC");
+    if ($query->num_rows() > 0)
+    {
+      foreach ($query->result() as $row)
+      {
+        if ($row->par1=="none") {
+          $particular=$row->par2;
+          $group=$row->g2;
+        }
+        else
+        {
+          $particular=$row->par1;
+          $group=$row->g1;
+        }
+        $this->insertcollection($row->name,$row->orno,$row->date,$particular,$row->amt,$group,$m,$year);
+        $this->insertcollectiondaily($row->name,$row->orno,$row->date,$particular,$row->amt,$group,$m,$year);
+
+        //$data[]=['name'=>$row->name,'orno'=>$row->orno,'date'=>$row->date,'particular'=>$particular,'amt'=>$row->amt,'group'=>$group];
+      }
+    }
+    return json_encode($data);
+  }
+  //insert to collection reports
+  function insertcollection($name,$orno,$date,$particular,$amt,$group,$month,$year)
+  {
+    $query1=$this->db->query("SELECT
+      particular,
+      {$group} AS `amount`,
+      grossReceipt AS `gamount`
+    FROM
+      collectionreport
+    WHERE
+      collectionreport.`or` = '{$orno}'");
+    if ($query1->num_rows() > 0)
+    {
+      foreach ($query1->result() as $row1)
+      {
+        $data = array(
+          'date'=>$date,
+          'name'=>$name,
+          'particular'=>$row1->particular.", ".$particular,
+          $group=>$amt+$row1->amount,
+          'grossReceipt'=>$amt+$row1->gamount
+        );
+        $this->db->where('collectionreport.`OR`', $orno);
+        $this->db->update('collectionreport', $data);
+      }
+    }
+    else
+    {
+      $arr['date']=$date;
+      $arr['or']=$orno;
+      $arr['name']=$name;
+      $arr['particular']=$particular;
+      $arr['grossReceipt']=$amt;
+      $arr['merchandise']=0;
+      $arr['others']=0;
+      $arr['unifast']=0;
+      $arr['specialExam']=0;
+      $arr['scnl']=0;
+      $arr['elearning']=0;
+      $arr['nccuk']=0;
+      $arr['msfee']=0;
+      $arr['oracle']=0;
+      $arr['hp']=0;
+      $arr['studentServices']=0;
+      $arr['sap']=0;
+      $arr['stcab']=0;
+      $arr['insurance']=0;
+      $arr['office365']=0;
+      $arr['shs']=0;
+      $arr['netR']=0;
+      $arr[$group]=$amt;
+      $arr['month']=$month;
+      $arr['year']=$year;
+
+      $this->db->insert('collectionreport',$arr);
+    }
+  }
+  //insert collection daily
+  function insertcollectiondaily($name,$orno,$date,$particular,$amt,$group,$month,$year)
+  {
+    $data = array(
+      'name'=>$name,
+      'or'=>$orno,
+      'date'=>$date,
+      'particular'=>$particular,
+      'amt'=>$amt,
+      'CollectionReportGroup'=>$group,
+      'month'=>$month,
+      'year'=>$year
+    );
+    $this->db->insert('collectionReportDaily',$data);
   }
   //delete fee sched
 	function deletesched($id)
@@ -1754,7 +2096,7 @@ class Main_model extends CI_Model
 	function savesched()
   {
     $arr['month']=$this->input->post('month');
-    $arr['day']=$this->input->post('day');
+    $arr['payDate']=$this->input->post('reservation');
     $arr['year']=$this->input->post('year');
     $arr['percent']=$this->input->post('percent');
     $arr['label']=$this->input->post('term');
@@ -1816,7 +2158,9 @@ class Main_model extends CI_Model
     $arr['feeType']=$this->input->post('feeType');
     $arr['semId']=$this->input->post('sem');
     $arr['syID']=$this->input->post('sy');
+    $arr['syID']=$this->input->post('sy');
     $arr['collectionReportGroup']=$this->input->post('collection');
+    $arr['priority']=$this->input->post('priority');
     return $this->db->insert('particulars',$arr);
 	}
   //generate account slip
@@ -1930,27 +2274,25 @@ class Main_model extends CI_Model
 					$payment[]=[];
 				}
 				// fee sched percent
-				if ($level=="College")
-				{
-					$prelim=0.45;
-					$midterm=0.65;
-					$prefinal=0.85;
-					$final=1;
-          $dl1="";
-          $dl2="";
-          $dl3="";
-          $dl4="";
-					$percent = $this->db->query("SELECT
-            fee_schedule.label,
-            fee_schedule.percent,
-            CONCAT(fee_schedule.`month`,' ',fee_schedule.`day`,', ',fee_schedule.`year`) AS `deadline`
-          FROM
-  					fee_schedule
-  				INNER JOIN sem ON fee_schedule.semId = sem.semId
-  				INNER JOIN sy ON fee_schedule.syId = sy.syId
-  				WHERE
-  					sem.sem = '{$sem}' AND
-  					sy.sy = '{$sy}'");
+				$prelim=0.45;
+				$midterm=0.65;
+				$prefinal=0.85;
+				$final=1;
+        $dl1="";
+        $dl2="";
+        $dl3="";
+        $dl4="";
+				$percent = $this->db->query("SELECT
+          fee_schedule.label,
+          fee_schedule.percent,
+          fee_schedule.payDate AS `deadline`
+        FROM
+					fee_schedule
+				INNER JOIN sem ON fee_schedule.semId = sem.semId
+				INNER JOIN sy ON fee_schedule.syId = sy.syId
+				WHERE
+					sem.sem = '{$sem}' AND
+					sy.sy = '{$sy}'");
 				if ($percent->num_rows() > 0)
 				{
 					foreach ($percent->result() as $row1)
@@ -1977,8 +2319,7 @@ class Main_model extends CI_Model
 					}
 
 				}
-				}
-				else
+        if ($level!="College")
 				{
 					$prelim=0.25;
 					$midterm=0.25;
@@ -2062,7 +2403,7 @@ class Main_model extends CI_Model
 					}
 				}
 
-				$old=$this->oldaccount($row->ssi_id,$sy,$sem);
+				$old=$this->oldaccount2($row->ssi_id,$sy,$sem);
 				$assessold=$this->checkoldsys2($row->acct_no);
 				$bridgold=$this->checkoldsys3($row->acct_no);
 				$tutorialold=$this->checkoldsys4($row->acct_no);

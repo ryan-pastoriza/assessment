@@ -17,14 +17,14 @@
                 <span id="date_time" form-control></span>
                 <script type="text/javascript">window.onload = date_time('date_time');</script>
               </i>
-            </a>  
+            </a>
           </li>
           <li>
             <a href="<?php echo site_url('dashboard/logout/').$_SESSION['user']->userId; ?>" style="cursor: default;">
               <i class="fa fa-power-off">
 
               </i>
-            </a>  
+            </a>
           </li>
         </ul>
       </div>
@@ -50,7 +50,7 @@
           </a>
         </li>
         <li id="access_tab">
-          <a href="<?php echo site_url('fees') ?>"><i class="glyphicon glyphicon-barcode">
+          <a href="<?php echo site_url('fees2') ?>"><i class="glyphicon glyphicon-barcode">
             </i> <span>Fees</span></a>
         </li>
         <li id="access_tab">
@@ -152,7 +152,7 @@
 
     </section>
   </div>
-  
+
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.0
@@ -164,8 +164,8 @@
 </div>
 <script>
   $(function () {
-  
-  
+
+
     /* ChartJS
      * -------
      * Here we will create a few charts using ChartJS
