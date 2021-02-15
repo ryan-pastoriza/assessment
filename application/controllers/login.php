@@ -13,7 +13,7 @@ class Login extends CI_Controller {
         if ($this->session->userdata('user'))
         {
 
-          redirect("fees");
+          redirect("fees2");
         }
 	}
 
